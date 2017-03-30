@@ -1,0 +1,154 @@
+<header class="navbar">
+    <div class="container-fluid">
+        <button class="navbar-toggler hidden-lg-up" type="button" mobile-nav-toggle>&#9776;</button>
+        <a class="navbar-brand" href="#"></a>
+        <ul class="nav navbar-nav hidden-md-down">
+            <li class="nav-item">
+                <a class="nav-link navbar-toggler sidebar-toggle" href="#">&#9776;</a>
+            </li>
+        </ul>
+        <div class="hidden-md-down pull-right">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/contactus']">Contact Us &nbsp;&nbsp;&nbsp;</a>
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/location']">Location &nbsp;&nbsp;&nbsp;</a>
+        </div>
+    </div>
+</header>
+
+<div class="sidebar">
+    <nav class="sidebar-nav">
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" [routerLink]="['/dashboard']">Welcome</a>
+            </li>
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle">Products</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/swroduct']">Single-Wall Round/Flat Oval Duct and Fittings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/dwroduct']">Double-Wall Round/Flat Oval Duct and Fittings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/swrectduct']">Single-Wall Rectangular Duct and Fittings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/dwrectduct']">Rectangular-k27<sup>®</sup> Duct and Fittings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/exposed']">Exposed Duct</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/silver']">SilverGuard™ Antimicrobial Ductwork</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/unigasket']">Uni-Gasket<sup>®</sup> Self-Sealing Fittings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/unicoat']">Uni-Coat™ — Polyvinyl-Chloride-Coated Steel Ductwork</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle">Products-Misc</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/unistack']">Uni-Stack™ Chimney, Breaching and Grease Duct</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/uniquick']">Uni-Quick™ Movable Duct System</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/ddf']">Duct-D-Fuser™ Terminal Outlets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/factair']">Factair™ Terminal Outlets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/vcdampers']">Volume Control Dampers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/accessdoors']">Access Doors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/leakdetect']">Leak Detective<sup>®</sup> Test Equipment</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/unihousing']">Uni-Housing™ Pressurized Enclosures</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/soundpak']">Sounpak<sup>®</sup> HVAC Silencers</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle">Services</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/uniduct']">Duct System Design</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/onsitemfg']">On-Site Duct Manufacturing</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" [routerLink]="['/tools']">Tech Tools</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" [routerLink]="['/customers']">Ask a Duct Design Expert</a>
+            </li>
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle">Literature</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/cas']">Current Awareness Service</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/solutionSeries']">Solution Series</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/productLit']">Product Literature</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/dimPerfData']">Dimensional and Performance Data</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" [routerLink]="['/tools']">Tech Tools</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" [routerLink]="['/contactus']">Contact Us</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" [routerLink]="['/location']">Location</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<!-- Main content -->
+<main class="main">
+
+    <!-- Breadcrumb -->
+    <ol class="breadcrumb">
+        <breadcrumbs></breadcrumbs>
+    </ol>
+
+    <div class="container-fluid">
+        <router-outlet></router-outlet>
+    </div>
+    <!-- /.conainer-fluid -->
+</main>
+
+<footer class="footer">
+    <span>
+        <p class="text-xs-center">
+            &copy; {{year}} <a href="http://mcgillairflow.com">McGill AirFlow <small>LLC</small></a> — Family owned and operated since 1951
+        </p>
+    </span>
+    <span class="float-xs-right">
+        
+    </span>
+</footer>
