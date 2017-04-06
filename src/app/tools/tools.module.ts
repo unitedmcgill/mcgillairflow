@@ -5,6 +5,7 @@ import { TabsModule }               from 'ng2-bootstrap/tabs';
 
 import { ToolsComponent }       from './tools.component';
 import { ToolsRoutingModule }   from './tools-routing.module';
+import { ToolsService }         from './tools.service';
 
 @NgModule({
     imports: [
@@ -15,6 +16,7 @@ import { ToolsRoutingModule }   from './tools-routing.module';
     ],
     declarations: [ 
         ToolsComponent 
-    ]
+    ],
+    providers:[ToolsService]
 })
 export class ToolsModule { }

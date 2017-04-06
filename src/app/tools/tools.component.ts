@@ -1,36 +1,66 @@
 import { Component, OnInit } from '@angular/core';
+import { ToolsService } from './tools.service';
+import { ToolsFormData } from '../models/tools-form-data';
 
 @Component({
-  selector: 'app-tools',
+  //selector: 'app-tools',
   templateUrl: './tools.component.html',
-  styleUrls:  ['./tools.component.scss']
+  styleUrls: ['./tools.component.scss']
 })
 export class ToolsComponent implements OnInit {
 
-  constructor() { }
+  //public active : boolean;
+  public errorMessage: string;
+  public data : ToolsFormData;
 
-  public tabs:Array<any> = [
-    {title: 'Dynamic Title 1', content: 'Dynamic content 1'},
-    {title: 'Dynamic Title 2', content: 'Dynamic content 2', disabled: true},
-    {title: 'Dynamic Title 3', content: 'Dynamic content 3', removable: true},
-    {title: 'Dynamic Title 4', content: 'Dynamic content 4', customClass: 'customClass'}
+  public units = [
+    { value: '1', display: 'cfm' },
+    { value: '0', display: 'L/s'}
   ];
- 
-  public alertMe():void {
-    setTimeout(function ():void {
-      alert('You\'ve selected the alert tab!');
-    });
-  };
- 
-  public setActiveTab(index:number):void {
-    this.tabs[index].active = true;
-  };
- 
-  public removeTabHandler(/*tab:any*/):void {
-    console.log('Remove Tab handler');
-  };
+
+  constructor( private toolsService: ToolsService) {
+    //this.active = true;
+   }
 
   ngOnInit() {
+    this.data = {
+      Value: 0,
+      Unit: this.units[0].value,
+      Result: 0
+    }
+    
+    // this.contactUsService.getValues()
+    //                      .subscribe(
+    //                         data => this.values = data,
+    //                         err => console.error(err),
+    //                         () => console.log('done'));
+  }
+
+  public onConvertVolumeFlowRate(){
+    //console.log(this.config.apiUrl);
+    //alert(JSON.stringify(this.config));
+    
+    // Set the domain the request is coming from
+    let value = String(this.data.Value);
+    let toCfm = String(this.data.Unit);
+
+    this.toolsService.convertVolumeFlowRate(value,toCfm)
+        .subscribe((result:string) => {
+          // Success
+          this.data.Result = Number(result);
+          console.log(this.data.Result);
+        },
+        // On Error
+        (err:any) => {
+          console.log(err);
+        },
+        // Finally
+        () => console.log('convertValueFlowRate() called'));
+  
+    // Trick to reset the pristine state of the form
+    // This is a temporary workaraound until a form reset procedure is available
+    //this.active = false;
+    //setTimeout(() => this.active = true, 0);
   }
 
 }
