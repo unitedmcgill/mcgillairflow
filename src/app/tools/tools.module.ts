@@ -3,9 +3,11 @@ import { CommonModule }             from '@angular/common';
 import { FormsModule }              from '@angular/forms';
 import { TabsModule }               from 'ng2-bootstrap/tabs';
 
-import { ToolsComponent }       from './tools.component';
-import { ToolsRoutingModule }   from './tools-routing.module';
-import { ToolsService }         from './tools.service';
+import { ToolsComponent }           from './tools.component';
+import { ToolsRoutingModule }       from './tools-routing.module';
+import { ToolsService }             from './tools.service';
+
+import { GreaterThanZeroValidator }         from '../shared/greaterthanzero.validator';
 
 @NgModule({
     imports: [
@@ -15,7 +17,8 @@ import { ToolsService }         from './tools.service';
         TabsModule.forRoot()
     ],
     declarations: [ 
-        ToolsComponent 
+        ToolsComponent,
+        GreaterThanZeroValidator
     ],
     providers:[ToolsService]
 })

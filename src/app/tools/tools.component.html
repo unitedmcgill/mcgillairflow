@@ -37,12 +37,20 @@
         <hr class="hr-blue">
         <span>This web tool converts the entered value to cubic feet per minute (cfm) or to liters per second (L/s) depending on your selection after entering a value.</span>
         <hr class="hr-blue" ><br />
-        <form name="toolsform" (ngSubmit)="onConvertVolumeFlowRate()" #toolsForm="ngForm">
+        <form novalidate (ngSubmit)="onConvertVolumeFlowRate()" #f="ngForm">
           <div class="form-group row">
             <label class="col-xs-4 col-form-label" for="value-input">Value ({{data.Unit==1?"L/s":"cmf"}})
             </label>
             <div class="col-xs-3">
-              <input type="number" class="form-control" id="value-input" [(ngModel)]="data.Value" name="value"  (click)="$event.target.select()">
+              <input type="number" class="form-control" [(ngModel)]="data.Value" name="value" #value="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="value.errors && (value.dirty || value.touched )">
+                <p *ngIf="value.errors.required">
+                    The value is required
+                </p>
+                <p *ngIf="value.errors.greaterThanZero">
+                    Value must be > 0
+                </p>
+              </div>
             </div>
           </div>
           <div class="form-group row">
@@ -57,7 +65,7 @@
             <label class="col-xs-4 col-form-label" >Results: &nbsp;&nbsp; {{data.Result}} &nbsp;&nbsp;{{data.Unit==0?"L/s":"cmf"}}</label>
           </div>
           <div class="form-group row">
-            <button type="submit" class="btn-space btn btn-success">Calculate</button> 
+            <button [disabled]="f.invalid" type="submit" class="btn-space btn btn-success">Calculate</button> 
           </div>
         </form>
       </div>
@@ -66,35 +74,99 @@
       <div class="card card-block card-outline-primary ">
         <h4 class="card-title">Convert Duct Types</h4>
         <hr class="hr-blue">
-        <span>This web tool converts rectangular duct to equivalent round.</span>
-        <span>After entering all the needed data, click the Calculate button. The result will be a pass or fail. Press the Reset button to clear all values.</span>
+        <span>This web tool converts duct to rectuangular or equivalent round.</span>
+        <span>After entering all the needed data, click the Calculate button.</span>
         <hr class="hr-blue" ><br />
-        <form name="ductform" (ngSubmit)="onConvertDuctTypes()" #ductForm="ngForm">
+        <form (ngSubmit)="onConvertDuctTypes()" #d="ngForm">
           <div class="form-group row">
             <label class="col-xs-4 col-form-label" >Calculation Type</label>
             <div class="col-xs-2" *ngFor="let duct of ducts">
                 <input type="radio" id="duct-input" [(ngModel)]="ductConvert.type" name="type" [value]="duct.value">{{duct.display}}
             </div>
           </div>
-          <div *ngIf="ductConvert.type==1" class="form-group row">
+          <!--Round, type = 0-->
+          <div *ngIf="ductConvert.type==0" class="form-group row">
+            <label class="col-xs-4 col-form-label" for="diameter-input">Diameter (inches)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="ductConvert.diameter" name="diameter" #diameter="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="diameter.errors && (diameter.dirty || diameter.touched )">
+                <p *ngIf="diameter.errors.required">
+                    The Diameter is required
+                </p>
+                <p *ngIf="diameter.errors.greaterThanZero">
+                    Diameter must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="ductConvert.type==0" class="form-group row">
+            <label class="col-xs-4 col-form-label" for="minor-input">Minor Axis (inches)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="ductConvert.minor" name="minor" #minor="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="minor.errors && (minor.dirty || minor.touched )">
+                <p *ngIf="minor.errors.required">
+                    The Minor is required
+                </p>
+                <p *ngIf="minor.errors.greaterThanZero">
+                    Minor must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="ductConvert.type==0" class="form-group row">
+            <label class="col-xs-4 col-form-label" for="rect-major-input">Results: &nbsp;&nbsp;
+            </label>
+            <div class="col-xs-8">
+              <span>Rectangular Major: &nbsp; {{ductConvert.result1}} &nbsp; inches</span><br />
+              <span>Oval Major: &nbsp; {{ductConvert.result2}} &nbsp; inches</span>
+            </div>
+          </div>
+          <!--Rectuangular, type = 1-->
+          <div *ngIf="ductConvert.type==1 || ductConvert.type==2" class="form-group row">
             <label class="col-xs-4 col-form-label" for="rect-minor-input">Rectangular Minor (inches)
             </label>
             <div class="col-xs-3">
-              <input type="number" class="form-control" id="rect-minor-input" [(ngModel)]="ductConvert.rectMinor" name="rect-minor" (click)="$event.target.select()">
+              <input type="number" class="form-control" [(ngModel)]="ductConvert.rectMinor" name="rectMinor" #rectMinor="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="rectMinor.errors && (rectMinor.dirty || rectMinor.touched )">
+                <p *ngIf="rectMinor.errors.required">
+                    The RectMinor is required
+                </p>
+                <p *ngIf="rectMinor.errors.greaterThanZero">
+                    RectMinor must be > 0
+                </p>
+              </div>
             </div>
           </div>
           <div *ngIf="ductConvert.type==1" class="form-group row">
-            <label class="col-xs-4 col-form-label" for="rect-major-input">Rectangular Major (incdes)
+            <label class="col-xs-4 col-form-label" for="rect-major-input">Rectangular Major (inches)
             </label>
             <div class="col-xs-3">
-              <input type="number" class="form-control" id="rect-major-input" [(ngModel)]="ductConvert.rectMajor" name="rect-major"  (click)="$event.target.select()">
+              <input type="number" class="form-control" [(ngModel)]="ductConvert.rectMajor" name="rectMajor" #rectMajor="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="rectMajor.errors && (rectMajor.dirty || rectMajor.touched )">
+                <p *ngIf="rectMajor.errors.required">
+                    The RectMajor is required
+                </p>
+                <p *ngIf="rectMajor.errors.greaterThanZero">
+                    RectMajor must be > 0
+                </p>
+              </div>
             </div>
           </div>
-          <div *ngIf="ductConvert.type==1" class="form-group row">
+          <div *ngIf="ductConvert.type==1 || ductConvert.type==2" class="form-group row">
             <label class="col-xs-4 col-form-label" for="rect-major-input">Oval Minor (inches)
             </label>
             <div class="col-xs-3">
-              <input type="number" class="form-control" id="oval-minor-input" [(ngModel)]="ductConvert.ovalMinor" name="oval-minor"  (click)="$event.target.select()">
+              <input type="number" class="form-control" [(ngModel)]="ductConvert.ovalMinor" name="ovalMinor" #ovalMinor="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="ovalMinor.errors && (ovalMinor.dirty || ovalMinor.touched )">
+                <p *ngIf="ovalMinor.errors.required">
+                    The OvalMinor is required
+                </p>
+                <p *ngIf="ovalMinor.errors.greaterThanZero">
+                    OvalMinor must be > 0
+                </p>
+              </div>
             </div>
           </div>
           <div *ngIf="ductConvert.type==1" class="form-group row">
@@ -105,9 +177,33 @@
               <span>Oval Major: &nbsp; {{ductConvert.result2}} &nbsp; inches</span>
             </div>
           </div>
+          <!--Flat Oval, type = 2-->
+          <div *ngIf="ductConvert.type==2" class="form-group row">
+            <label class="col-xs-4 col-form-label" for="oval-major-input">Oval Major (inches)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="ductConvert.ovalMajor" name="ovalMajor" #ovalMajor="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="ovalMajor.errors && (ovalMajor.dirty || ovalMajor.touched )">
+                <p *ngIf="ovalMajor.errors.required">
+                    The OvalMajor is required
+                </p>
+                <p *ngIf="ovalMajor.errors.greaterThanZero">
+                    OvalMajor must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="ductConvert.type==2" class="form-group row">
+            <label class="col-xs-4 col-form-label" for="rect-major-input">Results: &nbsp;&nbsp;
+            </label>
+            <div class="col-xs-8">
+              <span>Rectangular Major: &nbsp; {{ductConvert.result1}} &nbsp; inches</span><br />
+              <span>Oval Major: &nbsp; {{ductConvert.result2}} &nbsp; inches</span>
+            </div>
+          </div>
 
           <div class="form-group row">
-            <button type="submit" class="btn-space btn btn-success">Calculate</button> 
+            <button [disabled]="d.invalid" type="submit" class="btn-space btn btn-success">Calculate</button> 
           </div>
         </form>
       </div>

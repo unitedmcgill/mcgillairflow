@@ -35,11 +35,6 @@ export class ToolsService{
         let bodyString = JSON.stringify(ductConvert); // Stringify payload
         let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let url = this.config.apiUrl+"/convertducttypes";
-        //let options = new RequestOptions({ headers: headers, method: "post" }); // Create a request option
-        //.map((response:Response) => response.json())
-        // .map((res:Response) => {
-        //     console.log(res.json());
-        //     return res.json();})
 
         return this.http.post(url, bodyString, {headers:headers})
         .map((res:Response) => {

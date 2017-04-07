@@ -3,6 +3,7 @@ import { BrowserModule }                from '@angular/platform-browser';
 import { HttpModule }                   from '@angular/http';
 import { LocationStrategy,
          PathLocationStrategy }         from '@angular/common';
+import { FormsModule }                  from '@angular/forms';
 
 import { AppComponent }                 from './app.component';
 import { Ng2BootstrapModule }           from 'ng2-bootstrap';
@@ -32,6 +33,7 @@ export function initConfig(config: ConfigService){
         BrowserModule,
         HttpModule,
         AppRoutingModule,
+        FormsModule,
         Ng2BootstrapModule,
         ChartsModule
     ],
