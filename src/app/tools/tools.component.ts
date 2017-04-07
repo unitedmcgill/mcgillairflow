@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ToolsService } from './tools.service';
 import { ToolsFormData } from '../models/tools-form-data';
+import { IDuctConvert } from '../models/duct-convert';
 
 @Component({
   //selector: 'app-tools',
@@ -9,14 +10,32 @@ import { ToolsFormData } from '../models/tools-form-data';
 })
 export class ToolsComponent implements OnInit {
 
-  //public active : boolean;
-  public errorMessage: string;
-  public data : ToolsFormData;
-
   public units = [
     { value: '1', display: 'cfm' },
     { value: '0', display: 'L/s'}
   ];
+
+  public ducts = [
+    { value: 0, display: 'Round'},
+    { value: 1, display: 'Rectangular'},
+    { value: 2, display: 'Flat Oval'}
+  ];
+
+  //public active : boolean;
+  public errorMessage: string;
+  public data : ToolsFormData;
+  public ductConvert : IDuctConvert = {
+    name : '',
+    type : this.ducts[0].value,
+    rectMinor : 0,
+    rectMajor : 0,
+    ovalMinor : 0,
+    ovalMajor : 0,
+    diameter : 0,
+    minor : 0,
+    result1 : 0,
+    result2 : 0
+  };
 
   constructor( private toolsService: ToolsService) {
     //this.active = true;
@@ -28,12 +47,6 @@ export class ToolsComponent implements OnInit {
       Unit: this.units[0].value,
       Result: 0
     }
-    
-    // this.contactUsService.getValues()
-    //                      .subscribe(
-    //                         data => this.values = data,
-    //                         err => console.error(err),
-    //                         () => console.log('done'));
   }
 
   public onConvertVolumeFlowRate(){
@@ -61,6 +74,23 @@ export class ToolsComponent implements OnInit {
     // This is a temporary workaraound until a form reset procedure is available
     //this.active = false;
     //setTimeout(() => this.active = true, 0);
+  }
+
+  public onConvertDuctTypes(){
+    this.ductConvert.name = "foo";
+
+    this.toolsService.convertDuctTypes(this.ductConvert)
+      .subscribe((data: IDuctConvert) => {
+          if ( data ){
+            // console.log(data);
+            // console.log(this.ductConvert);
+            // const duct = JSON.stringify(data);
+            this.ductConvert = data;
+            // console.log(this.ductConvert);
+          } else {
+            console.log("error");
+          }
+      })
   }
 
 }

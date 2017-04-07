@@ -31,25 +31,6 @@
         </div>
       </div>
     </tab>
-    <tab heading="McGill AirClean">
-      <div class="card card-block card-outline-primary ">
-        <h4 class="card-title">Locations</h4>
-        <div class="card-text">
-          <br />
-          <b>McGill AirClean LLC</b>
-          <hr> 1777 Refugee Rd.<br /> Columbus, OH 43207<br /> 614/829-1200
-          <br /> Fax: 614/445-8759<br /> sales@mcgillairclean.com
-          <br />
-        </div>
-        <div class="card-text">
-          <br />
-          <b>McGill AirClean Plant</b>
-          <hr> 1779 Refugee Rd.<br /> Columbus, OH 43207<br /> 614/829-1200
-          <br /> Fax: 614/829-1319<br /> production@mcgillairclean.com
-          <br />
-        </div>
-      </div>
-    </tab>
     <tab heading="Convert Volume Flow Rate">
       <div class="card card-block card-outline-primary ">
         <h4 class="card-title">Convert Volume Flow Rate</h4>
@@ -60,8 +41,8 @@
           <div class="form-group row">
             <label class="col-xs-4 col-form-label" for="value-input">Value ({{data.Unit==1?"L/s":"cmf"}})
             </label>
-            <div class="col-xs-2">
-              <input type="number" class="form-control" id="value-input" [(ngModel)]="data.Value" name="value">
+            <div class="col-xs-3">
+              <input type="number" class="form-control" id="value-input" [(ngModel)]="data.Value" name="value"  (click)="$event.target.select()">
             </div>
           </div>
           <div class="form-group row">
@@ -81,6 +62,57 @@
         </form>
       </div>
     </tab>
+    <tab heading="Convert Duct Types">
+      <div class="card card-block card-outline-primary ">
+        <h4 class="card-title">Convert Duct Types</h4>
+        <hr class="hr-blue">
+        <span>This web tool converts rectangular duct to equivalent round.</span>
+        <span>After entering all the needed data, click the Calculate button. The result will be a pass or fail. Press the Reset button to clear all values.</span>
+        <hr class="hr-blue" ><br />
+        <form name="ductform" (ngSubmit)="onConvertDuctTypes()" #ductForm="ngForm">
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" >Calculation Type</label>
+            <div class="col-xs-2" *ngFor="let duct of ducts">
+                <input type="radio" id="duct-input" [(ngModel)]="ductConvert.type" name="type" [value]="duct.value">{{duct.display}}
+            </div>
+          </div>
+          <div *ngIf="ductConvert.type==1" class="form-group row">
+            <label class="col-xs-4 col-form-label" for="rect-minor-input">Rectangular Minor (inches)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" id="rect-minor-input" [(ngModel)]="ductConvert.rectMinor" name="rect-minor" (click)="$event.target.select()">
+            </div>
+          </div>
+          <div *ngIf="ductConvert.type==1" class="form-group row">
+            <label class="col-xs-4 col-form-label" for="rect-major-input">Rectangular Major (incdes)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" id="rect-major-input" [(ngModel)]="ductConvert.rectMajor" name="rect-major"  (click)="$event.target.select()">
+            </div>
+          </div>
+          <div *ngIf="ductConvert.type==1" class="form-group row">
+            <label class="col-xs-4 col-form-label" for="rect-major-input">Oval Minor (inches)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" id="oval-minor-input" [(ngModel)]="ductConvert.ovalMinor" name="oval-minor"  (click)="$event.target.select()">
+            </div>
+          </div>
+          <div *ngIf="ductConvert.type==1" class="form-group row">
+            <label class="col-xs-4 col-form-label" for="rect-major-input">Results: &nbsp;&nbsp;
+            </label>
+            <div class="col-xs-8">
+              <span>Round Diameter: &nbsp; {{ductConvert.result1}} &nbsp; inches</span><br />
+              <span>Oval Major: &nbsp; {{ductConvert.result2}} &nbsp; inches</span>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <button type="submit" class="btn-space btn btn-success">Calculate</button> 
+          </div>
+        </form>
+      </div>
+    </tab>
+
     <tab heading="McGill AirPressure">
       <div class="card card-block card-outline-primary ">
         <h4 class="card-title card-accent-primary">Locations</h4>

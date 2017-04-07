@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import  { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { ConfigService } from "../services/config.service";
 import { Observable } from 'rxjs/Observable';
+import { IDuctConvert } from '../models/duct-convert';
+
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -22,32 +24,37 @@ export class ToolsService{
                    .map((res: Response) => {
                         let result = res.json();
                         //TODO you can do stuff with the values here if you want
+
                         return result;
                    })
                    .catch(this._handleError);
     }
 
-    // public calcVolumeFlowRate(vars : CalcVars){
+    public convertDuctTypes(ductConvert : IDuctConvert) : Observable<IDuctConvert>{
        
-    //     let bodyString = JSON.stringify(vars); // Stringify payload
-    //     let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
-    //     let url = this.config.apiUrl+"/airflowcalcs";
-    //     //let options = new RequestOptions({ headers: headers, method: "post" }); // Create a request option
-    //     //.map((response:Response) => response.json())
-    //     // .map((res:Response) => {
-    //     //     console.log(res.json());
-    //     //     return res.json();})
+        let bodyString = JSON.stringify(ductConvert); // Stringify payload
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let url = this.config.apiUrl+"/convertducttypes";
+        //let options = new RequestOptions({ headers: headers, method: "post" }); // Create a request option
+        //.map((response:Response) => response.json())
+        // .map((res:Response) => {
+        //     console.log(res.json());
+        //     return res.json();})
 
-    //     this.http.post(url, bodyString, {headers:headers})
-    //     .map((res:Response) => res.json())      
-    //     .catch(this._handleError)
-    //     .subscribe(
-    //             data => console.log(data),
-    //             err => console.log(err)
-    //         );
+        return this.http.post(url, bodyString, {headers:headers})
+        .map((res:Response) => {
+            let data = res.json();
+            //console.log('test: '+data);
+            // Fix enums
+            //let duct = DuctType[data.type];
+            //data.type = duct;
+
+            return data;
+        })      
+        .catch(this._handleError);
        
-    //     //alert(url + ":" + bodyString);
-    // }
+        //alert(url + ":" + bodyString);
+    }
 
     private _handleError(error:any){
         console.error(error);
