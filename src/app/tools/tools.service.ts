@@ -3,6 +3,7 @@ import  { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { ConfigService } from "../services/config.service";
 import { Observable } from 'rxjs/Observable';
 import { IDuctConvert } from '../models/duct-convert';
+import { ICalcOperatingPressure } from '../models/operating-pressure'
 
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/map';
@@ -50,6 +51,70 @@ export class ToolsService{
        
         //alert(url + ":" + bodyString);
     }
+
+    public calcPressure(operatingPressure : ICalcOperatingPressure) : Observable<ICalcOperatingPressure>{
+       
+        let bodyString = JSON.stringify(operatingPressure); // Stringify payload
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let url = this.config.apiUrl+"/pressure";
+
+        return this.http.post(url, bodyString, {headers:headers})
+        .map((res:Response) => {
+            let data = res.json();
+            //console.log('test: '+data);
+            // Fix enums
+            //let duct = DuctType[data.type];
+            //data.type = duct;
+
+            return data;
+        })      
+        .catch(this._handleError);
+       
+        //alert(url + ":" + bodyString);
+    }
+
+    public calcStiffenerSpacing(operatingPressure : ICalcOperatingPressure) : Observable<ICalcOperatingPressure>{
+       
+        let bodyString = JSON.stringify(operatingPressure); // Stringify payload
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let url = this.config.apiUrl+"/stiffenerspacing";
+
+        return this.http.post(url, bodyString, {headers:headers})
+        .map((res:Response) => {
+            let data = res.json();
+            //console.log('test: '+data);
+            // Fix enums
+            //let duct = DuctType[data.type];
+            //data.type = duct;
+
+            return data;
+        })      
+        .catch(this._handleError);
+       
+        //alert(url + ":" + bodyString);
+    }
+
+    public calcMinThickness(operatingPressure : ICalcOperatingPressure) : Observable<ICalcOperatingPressure>{
+       
+        let bodyString = JSON.stringify(operatingPressure); // Stringify payload
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let url = this.config.apiUrl+"/minthickness";
+
+        return this.http.post(url, bodyString, {headers:headers})
+        .map((res:Response) => {
+            let data = res.json();
+            //console.log('test: '+data);
+            // Fix enums
+            //let duct = DuctType[data.type];
+            //data.type = duct;
+
+            return data;
+        })      
+        .catch(this._handleError);
+       
+        //alert(url + ":" + bodyString);
+    }
+
 
     private _handleError(error:any){
         console.error(error);

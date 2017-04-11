@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ToolsService } from './tools.service';
 import { ToolsFormData } from '../models/tools-form-data';
 import { IDuctConvert } from '../models/duct-convert';
+import { ICalcOperatingPressure } from '../models/operating-pressure';
 
 @Component({
   //selector: 'app-tools',
@@ -21,7 +22,58 @@ export class ToolsComponent implements OnInit {
     { value: 2, display: 'Flat Oval'}
   ];
 
-  //public active : boolean;
+  public pressures = [
+    { value: 0, display: 'Calculate Pressure'},
+    { value: 1, display: 'Calculate Stiffener Spacing'},
+    { value: 2, display: 'Calculate Gauge'}
+  ];
+
+  public constructions = [
+    { value: true, display: 'Spiral Duct'},
+    { value: false, display: 'Longseam Duct'}
+  ];
+
+  public materials = [
+    { value: 'Steel', display: 'Galvanized Steel'},
+    { value: 'Stainless Steel', display: 'Stainless Steel'},
+    { value: 'Aluminum', display: 'Aluminum'}
+  ];
+
+  public gauges = [
+    { value: 28, display: '28 ga (0.0225 in.)'},
+    { value: 26, display: '26 ga (0.0295 in.)'},
+    { value: 24, display: '24 ga (0.0370 in.)'},
+    { value: 22, display: '22 ga (0.0460 in.)'},
+    { value: 18, display: '18 ga (0.0760 in.)'},
+    { value: 16, display: '16 ga (0.0860 in.)'},
+    { value: 14, display: '14 ga'},
+    { value: 12, display: '12 ga'},
+    { value: 10, display: '10 ga'},
+    { value: 8, display: '8 ga'}
+  ];
+
+  public ductClasses = [
+    {value: 'Class A', display: 'Class A'},
+    {value: 'Class B', display: 'Class B'},
+    {value: 'Class C', display: 'Class C'},
+    {value: 'Class D', display: 'Class D'}
+  ];
+
+  public savedResults = [
+    { DuctType: 'Duct Type',
+      Spiral: 'Spiral',
+      Material: 'Material',
+      Diameter: 'Diameter',
+      DuctTemp: 'Duct Temp',
+      Gauge: 'Gauge / Class',
+      RingSpacing: 'Ring Spacing',
+      Pressure: 'Pressure',
+      ResultValue: 'Result Value',
+      ResultUnit: 'Result Unit',
+      StiffenerSize: 'Stiffener Size'}
+  ];
+
+  //public active : boolean;\
   public errorMessage: string;
   public data : ToolsFormData;
   public ductConvert : IDuctConvert = {
@@ -35,6 +87,20 @@ export class ToolsComponent implements OnInit {
     minor : 0,
     result1 : 0,
     result2 : 0
+  };
+
+  public operatingPressure : ICalcOperatingPressure = {
+    type : this.pressures[0].value,
+    spiral : this.constructions[0].value,
+    material : this.materials[0].value,
+    gauge : this.gauges[0].value,
+    diameter : 0,
+    stiffenerSpacing : 0,
+    ductTemp : 0,
+    ductClass : this.ductClasses[0].value,
+    pressure : 0,
+    operatingPressure : 0,
+    stiffenerSize : ''
   };
 
   constructor( private toolsService: ToolsService) {
@@ -93,4 +159,71 @@ export class ToolsComponent implements OnInit {
       })
   }
 
+  public onCalcPressure(){
+    // Check the type and call the correct toolsService
+
+    if ( this.operatingPressure.type == 0 )
+    {
+      this.toolsService.calcPressure(this.operatingPressure)
+        .subscribe((data:ICalcOperatingPressure) => {
+          if ( data ){
+            this.operatingPressure = data;
+          } else {
+            console.log("error")
+          }
+        })
+    }else if ( this.operatingPressure.type == 1 ) 
+    {
+      this.toolsService.calcStiffenerSpacing(this.operatingPressure)
+        .subscribe((data:ICalcOperatingPressure) => {
+          if ( data ){
+            this.operatingPressure = data;
+          } else {
+            console.log("error")
+          }
+        })
+    }else if ( this.operatingPressure.type == 2 )
+    {
+      this.toolsService.calcMinThickness(this.operatingPressure)
+        .subscribe((data:ICalcOperatingPressure) => {
+          if (data ) {
+              this.operatingPressure = data;
+          } else {
+              console.log("error")
+          }
+        })
+    }
+  }
+
+  public onSaveResults() {
+    var tmpResultVal = String(this.operatingPressure.gauge);
+    var tmpResultUnit = 'ga';
+    var tmpGauge = String(this.operatingPressure.ductClass);
+    if ( this.operatingPressure.type==0)
+    {
+      tmpResultVal = String(this.operatingPressure.operatingPressure);
+      tmpResultUnit = 'in. wg';
+      tmpGauge = String(this.operatingPressure.gauge);
+    } else if ( this.operatingPressure.type==1) {
+      tmpResultVal = String(this.operatingPressure.stiffenerSpacing);
+      tmpResultUnit = 'feet';
+      tmpGauge = String(this.operatingPressure.gauge);
+    } 
+
+    var saveResult = {
+     DuctType: this.pressures[this.operatingPressure.type].display,
+     Spiral: String(this.operatingPressure.spiral),
+     Material: this.operatingPressure.material,
+     Diameter: String(this.operatingPressure.diameter),
+     DuctTemp: String(this.operatingPressure.ductTemp),
+     Gauge: tmpGauge,
+     RingSpacing: String(this.operatingPressure.stiffenerSpacing),
+     Pressure: String(this.operatingPressure.pressure),
+     ResultValue: tmpResultVal,
+     ResultUnit: tmpResultUnit,
+     StiffenerSize: String(this.operatingPressure.stiffenerSize)
+    };
+
+    this.savedResults.push(saveResult);
+  }
 }

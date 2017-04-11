@@ -31,6 +31,7 @@
         </div>
       </div>
     </tab>
+    <!--Convert Flow Rate-->
     <tab heading="Convert Volume Flow Rate">
       <div class="card card-block card-outline-primary ">
         <h4 class="card-title">Convert Volume Flow Rate</h4>
@@ -70,6 +71,7 @@
         </form>
       </div>
     </tab>
+    <!--Convert Duct Types-->
     <tab heading="Convert Duct Types">
       <div class="card card-block card-outline-primary ">
         <h4 class="card-title">Convert Duct Types</h4>
@@ -206,6 +208,162 @@
             <button [disabled]="d.invalid" type="submit" class="btn-space btn btn-success">Calculate</button> 
           </div>
         </form>
+      </div>
+    </tab>
+
+    <!--Pressure-->
+      <tab heading="Pressure Calculations">
+      <div class="card card-block card-outline-primary ">
+        <h4 class="card-title">Pressure Calculations</h4>
+        <hr class="hr-blue">
+        <span>This web tool is used for calculating the recommended operating pressure, stiffener spacing, or gauge for round duct.</span>
+        <span>Calculated values are rounded to the nearest 0.1 in. wg.</span>
+        <hr class="hr-blue" ><br />
+        <form (ngSubmit)="onCalcPressure()" #p="ngForm">
+	        <div class="form-group row">
+            <label class="col-xs-4 col-form-label" >Calculation Type</label>
+            <div class="col-xs-2" *ngFor="let pressure of pressures">
+                <input type="radio" id="pressure-input" [(ngModel)]="operatingPressure.type" name="pressureCalc" [value]="pressure.value">{{pressure.display}}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" >Duct Construction</label>
+            <div class="col-xs-2" *ngFor="let construction of constructions">
+                <input type="radio" id="construction-input" [(ngModel)]="operatingPressure.spiral" name="construction" [value]="construction.value">{{construction.display}}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" >Material</label>
+            <div class="col-xs-2" *ngFor="let material of materials">
+                <input type="radio" id="material-input" [(ngModel)]="operatingPressure.material" name="material" [value]="material.value">{{material.display}}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Duct Diameter (inches)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="operatingPressure.diameter" name="diameter" #diameter2="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="diameter2.errors && (diameter2.dirty || diameter2.touched )">
+                <p *ngIf="diameter2.errors.required">
+                    The Diameter is required
+                </p>
+                <p *ngIf="diameter2.errors.greaterThanZero">
+                    Diameter must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Duct Temperature (&deg;F)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="operatingPressure.ductTemp" name="temperature" #temperature="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="temperature.errors && (temperature.dirty || temperature.touched )">
+                <p *ngIf="temperature.errors.required">
+                    The Temperature is required
+                </p>
+                <p *ngIf="temperature.errors.greaterThanZero">
+                    Temperature must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="operatingPressure.type==0 || operatingPressure.type==1" class="form-group row">
+            <label class="col-xs-4 col-form-label" >Metal Gauge</label>
+            <div class="col-xs-4">
+              <div class="col-xs-8" *ngFor="let gauge of gauges">
+                  <input type="radio" id="gauge-input" [(ngModel)]="operatingPressure.gauge" name="gauge" [value]="gauge.value">{{gauge.display}}
+              </div>
+              </div>
+          </div>
+          <div *ngIf="operatingPressure.type==2" class="form-group row">
+            <label class="col-xs-4 col-form-label" >Material Class</label>
+            <div class="col-xs-4">
+              <div class="col-xs-8" *ngFor="let ductClass of ductClasses">
+                  <input type="radio" id="duct-class-input" [(ngModel)]="operatingPressure.ductClass" name="ductClass" [value]="ductClass.value">{{ductClass.display}}
+              </div>
+            </div>
+          </div>
+          <div *ngIf="operatingPressure.type==0 || operatingPressure.type==2" class="form-group row">
+            <label class="col-xs-4 col-form-label">Ring Spacing (feet)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="operatingPressure.stiffenerSpacing" name="spacing" #spacing="ngModel" greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="spacing.errors && (spacing.dirty || spacing.touched )">
+                <p *ngIf="spacing.errors.greaterThanZero">
+                    Spacing must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="operatingPressure.type==1 || operatingPressure.type==2" class="form-group row">
+            <label class="col-xs-4 col-form-label">Pressure (in. wg)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="operatingPressure.pressure" name="pressure" #pressure="ngModel" nonZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="pressure.errors && (pressure.dirty || pressure.touched )">
+                <p *ngIf="pressure.errors.nonZero">
+                    Pressure cannot be 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <button [disabled]="p.invalid" type="submit" class="btn-space btn btn-success">Calculate</button> 
+          </div>
+        </form>
+        <form (ngSubmit)="onSaveResults()" #r="ngForm">
+          <!-- Calculate Pressure Results -->
+          <div *ngIf="operatingPressure.type==0" class="form-group row">
+            <label class="col-xs-4 col-form-label">Results: &nbsp;&nbsp;
+            </label>
+            <div class="col-xs-8">
+              <span>Recommended Operating Pressure: &nbsp; {{operatingPressure.operatingPressure}} &nbsp; in. wg</span><br />
+              <span>Stiffener Size: &nbsp; {{operatingPressure.stiffenerSize}}</span>
+            </div>
+          </div>
+          <!-- Calculate Stiffener Spacing Results -->
+          <div *ngIf="operatingPressure.type==1" class="form-group row">
+            <label class="col-xs-4 col-form-label">Results: &nbsp;&nbsp;
+            </label>
+            <div class="col-xs-8">
+              <span>Recommended Stiffener Spacing: &nbsp; {{operatingPressure.stiffenerSpacing}} &nbsp; feet</span><br />
+              <span>Stiffener Size: &nbsp; {{operatingPressure.stiffenerSize}}</span>
+            </div>
+          </div>
+          <!-- Calculate Stiffener Spacing Results -->
+          <div *ngIf="operatingPressure.type==2" class="form-group row">
+            <label class="col-xs-4 col-form-label">Results: &nbsp;&nbsp;
+            </label>
+            <div class="col-xs-8">
+              <span>Recommended Gauge: &nbsp; {{operatingPressure.gauge}}</span><br />
+              <span>Stiffener Size: &nbsp; {{operatingPressure.stiffenerSize}}</span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <button type="submit" class="btn-space btn btn-info">Save Result</button> 
+          </div>
+        </form>
+        <hr class="hr-blue" >
+          <!--Saved Results-->
+          <div class="row">
+                <div class = "col-xs-12" *ngFor="let result of savedResults">
+                  <div class = "col-xs-1">{{result.DuctType}}</div>
+                  <div class = "col-xs-1">{{result.Spiral}}</div>
+                  <div class = "col-xs-1">{{result.Material}}</div>
+                  <div class = "col-xs-1">{{result.Diameter}}</div>
+                  <div class = "col-xs-1">{{result.DuctTemp}}</div>
+                  <div class = "col-xs-1">{{result.Gauge}}</div>
+                  <div class = "col-xs-1">{{result.RingSpacing}}</div>
+                  <div class = "col-xs-1">{{result.Pressure}}</div>
+                  <div class = "col-xs-1">{{result.ResultValue}}</div>
+                  <div class = "col-xs-1">{{result.ResultUnit}}</div>
+                  <div class = "col-xs-1">{{result.StiffenerSize}}</div>
+                  <div *ngIf="result.DuctType=='Duct Type'" class = "col-xs-1">Remove?</div>
+                  <button *ngIf="result.DuctType!='Duct Type'" class = "col-xs-1">Remove</button>
+                </div>
+          </div>
+        <hr class="hr-blue" >
       </div>
     </tab>
 
