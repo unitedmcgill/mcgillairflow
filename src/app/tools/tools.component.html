@@ -210,11 +210,10 @@
         </form>
       </div>
     </tab>
-
-    <!--Pressure-->
-      <tab heading="Pressure Calculations">
+    <!--Pressure / Stiffener / Gauge-->
+      <tab heading="Pressure / Stiffener / Gauge">
       <div class="card card-block card-outline-primary ">
-        <h4 class="card-title">Pressure Calculations</h4>
+        <h4 class="card-title">Pressure / Stiffener / Gauge</h4>
         <hr class="hr-blue">
         <span>This web tool is used for calculating the recommended operating pressure, stiffener spacing, or gauge for round duct.</span>
         <span>Calculated values are rounded to the nearest 0.1 in. wg.</span>
@@ -347,7 +346,7 @@
         <hr class="hr-blue" >
           <!--Saved Results-->
           <div class="row">
-                <div class = "col-xs-12" *ngFor="let result of savedResults">
+                <div class = "col-xs-12" *ngFor="let result of savedResults; let i = index">
                   <div class = "col-xs-1">{{result.DuctType}}</div>
                   <div class = "col-xs-1">{{result.Spiral}}</div>
                   <div class = "col-xs-1">{{result.Material}}</div>
@@ -360,7 +359,118 @@
                   <div class = "col-xs-1">{{result.ResultUnit}}</div>
                   <div class = "col-xs-1">{{result.StiffenerSize}}</div>
                   <div *ngIf="result.DuctType=='Duct Type'" class = "col-xs-1">Remove?</div>
-                  <button *ngIf="result.DuctType!='Duct Type'" class = "col-xs-1">Remove</button>
+                  <button *ngIf="result.DuctType!='Duct Type'" class = "col-xs-1 fa fa-trash" (click)="onRemoveResult(i)"></button>
+                </div>
+          </div>
+        <hr class="hr-blue" >
+      </div>
+    </tab>
+
+    <!--Burst / Collapse-->
+      <tab heading="Burst / Collapse">
+      <div class="card card-block card-outline-primary ">
+        <h4 class="card-title">Burst / Collapse</h4>
+        <hr class="hr-blue">
+        <span>This web tool is used for calculating the burst or collapse pressure for round duct with no reinforcement.</span>
+        <span>Calculated values are rounded to the nearest 0.1 in. wg.</span>
+        <hr class="hr-blue" ><br />
+        <form (ngSubmit)="onBurstCollapse()" #b="ngForm">
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" >Duct Construction</label>
+            <div class="col-xs-2" *ngFor="let construction of constructions">
+                <input type="radio" id="construction-input" [(ngModel)]="operatingPressure.spiral" name="construction" [value]="construction.value">{{construction.display}}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" >Material</label>
+            <div class="col-xs-2" *ngFor="let material of materials">
+                <input type="radio" id="material-input" [(ngModel)]="operatingPressure.material" name="material" [value]="material.value">{{material.display}}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Duct Diameter (inches)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="operatingPressure.diameter" name="diameter" #diameter2="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="diameter2.errors && (diameter2.dirty || diameter2.touched )">
+                <p *ngIf="diameter2.errors.required">
+                    The Diameter is required
+                </p>
+                <p *ngIf="diameter2.errors.greaterThanZero">
+                    Diameter must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Duct Temperature (&deg;F)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="operatingPressure.ductTemp" name="temperature" #temperature="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="temperature.errors && (temperature.dirty || temperature.touched )">
+                <p *ngIf="temperature.errors.required">
+                    The Temperature is required
+                </p>
+                <p *ngIf="temperature.errors.greaterThanZero">
+                    Temperature must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" >Metal Gauge</label>
+            <div class="col-xs-4">
+              <div class="col-xs-8" *ngFor="let gauge of gauges">
+                  <input type="radio" id="gauge-input" [(ngModel)]="operatingPressure.gauge" name="gauge" [value]="gauge.value">{{gauge.display}}
+              </div>
+              </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" >Type of calculation</label>
+            <div class="col-xs-2" *ngFor="let type of burstCollapse">
+                <input type="radio" id="burst-input" name="burstcollapse" [(ngModel)]="burst" [value]="type.value">{{type.display}}
+            </div>
+          </div>
+          <div class="form-group row">
+            <button [disabled]="b.invalid" type="submit" class="btn-space btn btn-success">Calculate</button> 
+          </div>
+        </form>
+        <form (ngSubmit)="onSaveResultsBurst()" #r2="ngForm">
+          <!-- Calculate Brust Results -->
+          <div *ngIf="burst=='burst'" class="form-group row">
+            <label class="col-xs-4 col-form-label">Results: &nbsp;&nbsp;
+            </label>
+            <div class="col-xs-8">
+              <span>Burst Pressure: &nbsp; {{operatingPressure.pressure}} &nbsp; in. wg</span>
+              <span>Operating Pressure: &nbsp; {{operatingPressure.operatingPressure}} &nbsp; in. wg</span><br />
+            </div>
+          </div>
+          <!-- Calculate Collapse Results -->
+          <div *ngIf="burst=='collapse'" class="form-group row">
+            <label class="col-xs-4 col-form-label">Results: &nbsp;&nbsp;
+            </label>
+            <div class="col-xs-8">
+              <span>Collapse Pressure: &nbsp; {{operatingPressure.pressure}} &nbsp; in. wg</span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <button type="submit" class="btn-space btn btn-info">Save Result</button> 
+          </div>
+        </form>
+        <hr class="hr-blue" >
+          <!--Saved Results-->
+          <div class="row">
+                <div class = "col-xs-12" *ngFor="let result of savedResultsBurst; let i = index">
+                  <div class = "col-xs-1">{{result.CalcType}}</div>
+                  <div class = "col-xs-1">{{result.Spiral}}</div>
+                  <div class = "col-xs-1">{{result.Material}}</div>
+                  <div class = "col-xs-1">{{result.Diameter}}</div>
+                  <div class = "col-xs-1">{{result.DuctTemp}}</div>
+                  <div class = "col-xs-1">{{result.Gauge}}</div>
+                  <div class = "col-xs-1">{{result.Pressure}}</div>
+                  <div class = "col-xs-1">{{result.OperatingPressure}}</div>
+                  <div *ngIf="result.Spiral=='Spiral'" class = "col-xs-1">Remove?</div>
+                  <button *ngIf="result.Spiral!='Spiral'" class = "col-xs-1 fa fa-trash" (click)="onRemoveResultBurst(i)"></button>
                 </div>
           </div>
         <hr class="hr-blue" >

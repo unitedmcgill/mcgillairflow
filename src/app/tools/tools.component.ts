@@ -11,6 +11,11 @@ import { ICalcOperatingPressure } from '../models/operating-pressure';
 })
 export class ToolsComponent implements OnInit {
 
+  public burstCollapse = [
+    { value: 'burst', display: 'Calcualte Burst'},
+    { value: 'collapse', display: 'Calculate Collapse'}
+  ];
+
   public units = [
     { value: '1', display: 'cfm' },
     { value: '0', display: 'L/s'}
@@ -44,6 +49,7 @@ export class ToolsComponent implements OnInit {
     { value: 26, display: '26 ga (0.0295 in.)'},
     { value: 24, display: '24 ga (0.0370 in.)'},
     { value: 22, display: '22 ga (0.0460 in.)'},
+    { value: 20, display: '20 ga (0.0590 in.)'},
     { value: 18, display: '18 ga (0.0760 in.)'},
     { value: 16, display: '16 ga (0.0860 in.)'},
     { value: 14, display: '14 ga'},
@@ -57,6 +63,18 @@ export class ToolsComponent implements OnInit {
     {value: 'Class B', display: 'Class B'},
     {value: 'Class C', display: 'Class C'},
     {value: 'Class D', display: 'Class D'}
+  ];
+
+  public savedResultsBurst = [
+    { Spiral: 'Spiral',
+      Material: 'Material',
+      Diameter: 'Diameter',
+      DuctTemp: 'Duct Temp',
+      Gauge: 'Gauge / Class',
+      CalcType: 'Calc Type',
+      Pressure: 'Burst / Collapse Pressure',
+      OperatingPressure: 'Operating Pressure'
+    }
   ];
 
   public savedResults = [
@@ -74,6 +92,7 @@ export class ToolsComponent implements OnInit {
   ];
 
   //public active : boolean;\
+  public burst : string;
   public errorMessage: string;
   public data : ToolsFormData;
   public ductConvert : IDuctConvert = {
@@ -112,7 +131,9 @@ export class ToolsComponent implements OnInit {
       Value: 0,
       Unit: this.units[0].value,
       Result: 0
-    }
+    };
+
+    this.burst = this.burstCollapse[0].value;
   }
 
   public onConvertVolumeFlowRate(){
@@ -225,5 +246,40 @@ export class ToolsComponent implements OnInit {
     };
 
     this.savedResults.push(saveResult);
+  }
+
+  public onRemoveResult(i){
+    this.savedResults.splice(i,1);
+  }
+
+  public onSaveResultsBurst() {
+
+    var saveResult = {
+     Spiral: String(this.operatingPressure.spiral),
+     Material: this.operatingPressure.material,
+     Diameter: String(this.operatingPressure.diameter),
+     DuctTemp: String(this.operatingPressure.ductTemp),
+     Gauge: String(this.operatingPressure.gauge),
+     CalcType: this.burst,
+     Pressure: String(this.operatingPressure.pressure),
+     OperatingPressure: String(this.operatingPressure.operatingPressure)
+    };
+
+    this.savedResultsBurst.push(saveResult);
+  }
+
+  public onRemoveResultBurst(i){
+    this.savedResultsBurst.splice(i,1);
+  }
+
+  public onBurstCollapse(){
+    this.toolsService.calcBurstCollapse(this.burst, this.operatingPressure)
+      .subscribe((data:ICalcOperatingPressure) => {
+        if (data ) {
+            this.operatingPressure = data;
+        } else {
+            console.log("error")
+        }
+      })
   }
 }

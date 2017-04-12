@@ -115,6 +115,29 @@ export class ToolsService{
         //alert(url + ":" + bodyString);
     }
 
+    public calcBurstCollapse( calcType : String, operatingPressure : ICalcOperatingPressure) : Observable<ICalcOperatingPressure>{
+        let bodyString = JSON.stringify(operatingPressure); // Stringify payload
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let url = this.config.apiUrl+"/pressurecollapse";
+        if ( calcType == 'burst')
+        {
+            url = this.config.apiUrl+"/pressureburst";
+        }
+
+        return this.http.post(url, bodyString, {headers:headers})
+        .map((res:Response) => {
+            let data = res.json();
+            //console.log('test: '+data);
+            // Fix enums
+            //let duct = DuctType[data.type];
+            //data.type = duct;
+
+            return data;
+        })      
+        .catch(this._handleError);
+       
+        //alert(url + ":" + bodyString);
+    }
 
     private _handleError(error:any){
         console.error(error);
