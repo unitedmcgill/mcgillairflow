@@ -4,6 +4,7 @@ import { ConfigService } from "../services/config.service";
 import { Observable } from 'rxjs/Observable';
 import { IDuctConvert } from '../models/duct-convert';
 import { ICalcOperatingPressure } from '../models/operating-pressure'
+import { ISupportDesign } from '../models/support-design'
 
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/map';
@@ -138,6 +139,27 @@ export class ToolsService{
        
         //alert(url + ":" + bodyString);
     }
+
+    public calcSupport(calcSupport : ISupportDesign) : Observable<ISupportDesign>{
+       
+        let bodyString = JSON.stringify(calcSupport); // Stringify payload
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let url = this.config.apiUrl+"/support";
+
+        return this.http.post(url, bodyString, {headers:headers})
+        .map((res:Response) => {
+            let data = res.json();
+            //console.log('test: '+data);
+            // Fix enums
+            //let duct = DuctType[data.type];
+            //data.type = duct;
+
+            return data;
+        })      
+        .catch(this._handleError);
+       
+        //alert(url + ":" + bodyString);
+    }    
 
     private _handleError(error:any){
         console.error(error);

@@ -3,6 +3,7 @@ import { ToolsService } from './tools.service';
 import { ToolsFormData } from '../models/tools-form-data';
 import { IDuctConvert } from '../models/duct-convert';
 import { ICalcOperatingPressure } from '../models/operating-pressure';
+import { ISupportDesign } from '../models/support-design';
 
 @Component({
   //selector: 'app-tools',
@@ -38,6 +39,13 @@ export class ToolsComponent implements OnInit {
     { value: false, display: 'Longseam Duct'}
   ];
 
+  public insulations = [
+    { value: 0, display: 'Uni-Seal Single-wall' },
+    { value: 1, display: '1 in. Accousti-K27' },
+    { value: 2, display: '2 in. Accousti-K27' },
+    { value: 3, display: '3 in. Accousti-K27' }
+  ];
+
   public materials = [
     { value: 'Steel', display: 'Galvanized Steel'},
     { value: 'Stainless Steel', display: 'Stainless Steel'},
@@ -58,11 +66,38 @@ export class ToolsComponent implements OnInit {
     { value: 8, display: '8 ga'}
   ];
 
+  public loads = [
+    { value: 0.0, display: 'Empty Duct (Air)'},
+    { value: 0.5, display: 'Half Full Duct'},
+    { value: 1.0, display: 'Full Duct'}
+  ];
+
   public ductClasses = [
     {value: 'Class A', display: 'Class A'},
     {value: 'Class B', display: 'Class B'},
     {value: 'Class C', display: 'Class C'},
     {value: 'Class D', display: 'Class D'}
+  ];
+
+  public savedResultsSupport = [
+    { Insulation: 'Ins.',
+      Load: 'Load',
+      Density: 'Dnsty',
+      SafetyFactor: 'Safety',
+      Spiral: 'Spiral',
+      Material: 'Mat.',
+      Diameter: 'Dia',
+      Wind: 'Wind',
+      Snow: 'Snow',
+      RingSpacing: 'Spacing',
+      InnerGauge: 'In',
+      OuterGauge: 'Out',
+      AllowDeflection: 'Alwd Def.', 
+      ActualDeflection: 'Act. Def.', 
+      MaxLength: 'Max Len.',
+      PassFail: 'Pass?',
+      MaterialLoad: 'Mat. Load'
+    }
   ];
 
   public savedResultsBurst = [
@@ -120,6 +155,26 @@ export class ToolsComponent implements OnInit {
     pressure : 0,
     operatingPressure : 0,
     stiffenerSize : ''
+  };
+
+  public supportDesign : ISupportDesign = {
+    insulation : this.insulations[0].value,
+    load : this.loads[0].value,
+    density : 0, 
+    safetyFactor : 0,
+    spiral : this.constructions[0].value,
+    material : this.materials[0].value,
+    diameter : 0,
+    wind : 0,
+    snow : 0,
+    ringSpacing : 0,
+    innerGauge : this.gauges[0].value,
+    outerGauge : this.gauges[0].value,
+    allowedDeflection : 0,
+    actualDeflection : 0,
+    maxLength : 0,
+    passFail : 'Pass',
+    materialLoad : 0
   };
 
   constructor( private toolsService: ToolsService) {
@@ -216,6 +271,47 @@ export class ToolsComponent implements OnInit {
     }
   }
 
+  public onCalcSupportDesign(){
+
+    this.toolsService.calcSupport(this.supportDesign)
+      .subscribe((data: ISupportDesign) => {
+          if ( data ){
+            // console.log(data);
+            // console.log(this.ductConvert);
+            // const duct = JSON.stringify(data);
+            this.supportDesign = data;
+            // console.log(this.ductConvert);
+          } else {
+            console.log("error");
+          }
+      })
+  }
+
+  public onSaveResultsSupportDesign() {
+    var saveResult = {
+      Insulation: String(this.supportDesign.insulation),
+      Part: String(this.supportDesign.load),
+      Density: String(this.supportDesign.density),
+      SafetyFactor: String(this.supportDesign.safetyFactor),
+      Spiral: String(this.supportDesign.spiral),
+      Material: String(this.supportDesign.material),
+      Diameter: String(this.supportDesign.diameter),
+      Wind: String(this.supportDesign.wind),
+      Snow: String(this.supportDesign.snow),
+      RingSpacing: String(this.supportDesign.ringSpacing),
+      InnerGauge: String(this.supportDesign.innerGauge),
+      OuterGauge: String(this.supportDesign.outerGauge),
+      Load: String(this.supportDesign.materialLoad),
+      AllowDeflection: String(this.supportDesign.allowedDeflection),
+      ActualDeflection: String(this.supportDesign.actualDeflection),
+      MaxLength: String(this.supportDesign.maxLength),
+      PassFail: String(this.supportDesign.passFail),
+      MaterialLoad: String(this.supportDesign.materialLoad)
+    };
+
+    this.savedResultsSupport.push(saveResult);
+  }
+
   public onSaveResults() {
     var tmpResultVal = String(this.operatingPressure.gauge);
     var tmpResultUnit = 'ga';
@@ -248,10 +344,6 @@ export class ToolsComponent implements OnInit {
     this.savedResults.push(saveResult);
   }
 
-  public onRemoveResult(i){
-    this.savedResults.splice(i,1);
-  }
-
   public onSaveResultsBurst() {
 
     var saveResult = {
@@ -268,10 +360,6 @@ export class ToolsComponent implements OnInit {
     this.savedResultsBurst.push(saveResult);
   }
 
-  public onRemoveResultBurst(i){
-    this.savedResultsBurst.splice(i,1);
-  }
-
   public onBurstCollapse(){
     this.toolsService.calcBurstCollapse(this.burst, this.operatingPressure)
       .subscribe((data:ICalcOperatingPressure) => {
@@ -282,4 +370,17 @@ export class ToolsComponent implements OnInit {
         }
       })
   }
+
+  public onRemoveResult(i){
+    this.savedResults.splice(i,1);
+  }
+
+  public onRemoveResultBurst(i){
+    this.savedResultsBurst.splice(i,1);
+  }
+
+  public onRemoveResultSupport(i){
+    this.savedResultsSupport.splice(i,1);
+  }
+
 }
