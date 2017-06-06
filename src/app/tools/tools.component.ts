@@ -321,6 +321,26 @@ export class ToolsComponent implements OnInit {
       })
   }
 
+  public onSaveResultsStackDesign(){
+    var saveResult = {
+      SafetyFactor: String(this.stackDesign.safetyFactor),
+      Spiral: String(this.stackDesign.spiral),
+      Material: String(this.stackDesign.material),
+      Diameter: String(this.stackDesign.diameter),
+      Wind: String(this.stackDesign.wind),
+      Height: String(this.stackDesign.height),
+      Gauge: String(this.stackDesign.gauge),
+      Velocity: String(this.stackDesign.velocity),
+      Stress: String(this.stackDesign.stress),
+      Buckling: String(this.stackDesign.buckling),
+      Yield: String(this.stackDesign.yield),
+      Deflection: String(this.stackDesign.deflection),
+      PassFail: String(this.stackDesign.passFail),
+    }
+
+    this.savedResultsStack.push(saveResult);
+  }
+
   public onCalcSupportDesign(){
 
     this.toolsService.calcSupport(this.supportDesign)
@@ -431,6 +451,10 @@ export class ToolsComponent implements OnInit {
 
   public onRemoveResultSupport(i){
     this.savedResultsSupport.splice(i,1);
+  }
+
+  public onRemoveStackSupport(i){
+    this.savedResultsStack.splice(i,1);
   }
 
 }
