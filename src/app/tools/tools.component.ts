@@ -4,6 +4,7 @@ import { ToolsFormData } from '../models/tools-form-data';
 import { IDuctConvert } from '../models/duct-convert';
 import { ICalcOperatingPressure } from '../models/operating-pressure';
 import { ISupportDesign } from '../models/support-design';
+import { IStackDesign } from '../models/stack-design';
 
 @Component({
   //selector: 'app-tools',
@@ -77,6 +78,23 @@ export class ToolsComponent implements OnInit {
     {value: 'Class B', display: 'Class B'},
     {value: 'Class C', display: 'Class C'},
     {value: 'Class D', display: 'Class D'}
+  ];
+
+  public savedResultsStack = [
+    { SafetyFactor: 'Safety',
+      Spiral: 'Spiral',
+      Material: 'Mat.',
+      Diameter: 'Dia',
+      Wind: 'Wind',
+      Height: 'Ht.',
+      Gauge: 'Ga.',
+      Velocity: 'Vel',
+      Stress: 'Stress',
+      Buckling: 'Buck',
+      Yield: 'Yield',
+      Deflection: 'Def.',
+      PassFail: 'Pass?'
+    }
   ];
 
   public savedResultsSupport = [
@@ -155,6 +173,22 @@ export class ToolsComponent implements OnInit {
     pressure : 0,
     operatingPressure : 0,
     stiffenerSize : ''
+  };
+
+  public stackDesign : IStackDesign = {
+    safetyFactor : 0,
+    spiral : this.constructions[0].value,
+    material : this.materials[0].value,
+    diameter : 0,
+    wind : 0,
+    height : 0,
+    gauge :  this.gauges[0].value,
+    velocity : 0,
+    stress : 0,
+    buckling : 0,
+    yield : 0,
+    deflection : 0,
+    passFail : 'Pass'
   };
 
   public supportDesign : ISupportDesign = {
@@ -269,6 +303,22 @@ export class ToolsComponent implements OnInit {
           }
         })
     }
+  }
+
+  public onCalcStackDesign(){
+
+    this.toolsService.calcStack(this.stackDesign)
+      .subscribe((data:IStackDesign) => {
+          if ( data ){
+            // console.log(data);
+            // console.log(this.ductConvert);
+            // const duct = JSON.stringify(data);
+            this.stackDesign = data;
+            // console.log(this.ductConvert);
+          } else {
+            console.log("error");
+          }
+      })
   }
 
   public onCalcSupportDesign(){

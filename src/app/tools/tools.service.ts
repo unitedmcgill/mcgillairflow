@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { IDuctConvert } from '../models/duct-convert';
 import { ICalcOperatingPressure } from '../models/operating-pressure'
 import { ISupportDesign } from '../models/support-design'
+import { IStackDesign } from '../models/stack-design'
 
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/map';
@@ -145,6 +146,28 @@ export class ToolsService{
         let bodyString = JSON.stringify(calcSupport); // Stringify payload
         let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let url = this.config.apiUrl+"/support";
+
+        return this.http.post(url, bodyString, {headers:headers})
+        .map((res:Response) => {
+            let data = res.json();
+            //console.log('test: '+data);
+            // Fix enums
+            //let duct = DuctType[data.type];
+            //data.type = duct;
+
+            return data;
+        })      
+        .catch(this._handleError);
+       
+        //alert(url + ":" + bodyString);
+    }    
+
+
+    public calcStack(calcSupport : IStackDesign) : Observable<IStackDesign>{
+       
+        let bodyString = JSON.stringify(calcSupport); // Stringify payload
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let url = this.config.apiUrl+"/stack";
 
         return this.http.post(url, bodyString, {headers:headers})
         .map((res:Response) => {

@@ -668,6 +668,147 @@
       </div>
     </tab>
 
+    <!--Stack Design-->
+    <tab heading="Stack Design">
+      <div class="card card-block card-outline-primary ">
+        <h4 class="card-title">Stack Design Check</h4>
+        <hr class="hr-blue">
+        <span>This web tool checks if the supplied information can handle the calculated load.</span>
+        <hr class="hr-blue" ><br />
+        <form (ngSubmit)="onCalcStackDesign()" #stkd="ngForm">
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Safety Factor
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="stackDesign.safetyFactor" name="safety" #safety="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="safety.errors && (safety.dirty || safety.touched )">
+                <p *ngIf="safety.errors.nonZero">
+                    Safety cannot be 0
+                </p>
+                <p *ngIf="safety.errors.greaterThanZero">
+                    Safety must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" >Duct Construction</label>
+            <div class="col-xs-2" *ngFor="let construction of constructions">
+                <input type="radio" id="stkd-construction-input" [(ngModel)]="stackDesign.spiral" name="construction" [value]="construction.value">{{construction.display}}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" >Material</label>
+            <div class="col-xs-2" *ngFor="let material of materials">
+                <input type="radio" id="stkd-material-input" [(ngModel)]="stackDesign.material" name="material" [value]="material.value">{{material.display}}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Duct Diameter (inches)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="stackDesign.diameter" name="diameter" #diameter3="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="diameter3.errors && (diameter3.dirty || diameter3.touched )">
+                <p *ngIf="diameter3.errors.required">
+                    The Diameter is required
+                </p>
+                <p *ngIf="diameter3.errors.greaterThanZero">
+                    Diameter must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Wind Velocity (mph)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="stackDesign.wind" name="wind" #wind="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="wind.errors && (wind.dirty || wind.touched )">
+                <p *ngIf="wind.errors.required">
+                    The wind velocity is required
+                </p>
+                <p *ngIf="wind.errors.greaterThanZero">
+                    Wind velocity must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Height (feet)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="stackDesign.height" name="height" #height="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="height.errors && (height.dirty || height.touched )">
+                <p *ngIf="height.errors.required">
+                    The height is required
+                </p>
+                <p *ngIf="height.errors.greaterThanZero">
+                    Height must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" >Gauge</label>
+            <div class="col-xs-4">
+              <div class="col-xs-8" *ngFor="let gauge of gauges">
+                  <input type="radio" id="stkd-ingauge-input" [(ngModel)]="stackDesign.gauge" name="Gauge" [value]="gauge.value">{{gauge.display}}
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <button [disabled]="stkd.invalid" type="submit" class="btn-space btn btn-success">Calculate</button> 
+          </div>
+        </form>
+
+        <form (ngSubmit)="onSaveResultsStackDesign()" #r4="ngForm">
+          <!-- Calculate Support Design Results -->
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Results: &nbsp;&nbsp;
+            </label>
+            <div class="col-xs-8">
+              <span>Critical Velocity: &nbsp; {{stackDesign.velocity}} &nbsp; mph</span><br />
+              <span>Actual Stress: &nbsp; {{stackDesign.stress}} &nbsp; psi</span><br />
+              <span>Critical Buckling: &nbsp; {{stackDesign.buckling}} &nbsp; psi</span><br />
+              <span>Critical Yield: &nbsp; {{stackDesign.yield}} &nbsp; psi</span><br />
+              <span>Deflection: &nbsp; {{stackDesign.deflection}} &nbsp; psi</span><br />
+              <span>Pass/Fail: &nbsp; {{stackDesign.passFail}}</span><br />
+            </div>
+          </div>
+          <!-- Calculate Collapse Results -->
+          <div class="form-group row">
+            <button type="submit" class="btn-space btn btn-info">Save Result</button> 
+          </div>
+        </form>
+        <hr class="hr-blue" >
+          <!--Saved Results-->
+          <div class="row">
+                <div class = "col-xs-12" *ngFor="let result of savedResultsStack; let i = index">
+                  <div class = "col-xs-1">{{result.SafetyFactor}}</div>
+                  <div class = "col-xs-1">{{result.Spiral}}</div>
+                  <div class = "col-xs-1">{{result.Material}}</div>
+                  <div class = "col-xs-1">{{result.Diameter}}</div>
+                  <div class = "col-xs-1">{{result.Wind}}</div>
+                  <div class = "col-xs-1">{{result.Height}}</div>
+                  <div class = "col-xs-1">{{result.Gauge}}</div>
+                </div>
+          </div>
+          <div class="row">
+                <div class = "col-xs-12" *ngFor="let result of savedResultsStack; let i = index">
+                  <div class = "col-xs-1">{{result.Velocity}}</div>
+                  <div class = "col-xs-1">{{result.Stress}}</div>
+                  <div class = "col-xs-1">{{result.Buckling}}</div>
+                  <div  class = "col-xs-1">{{result.Yield}}</div>
+                  <div  class = "col-xs-1">{{result.Deflection}}</div>
+                  <div class = "col-xs-1">{{result.PassFail}}</div>
+                  <div *ngIf="result.Spiral=='Spiral'" class = "col-xs-1">Remove?</div>
+                  <button *ngIf="result.Spiral!='Spiral'" class = "col-xs-1 fa fa-trash" (click)="onRemoveStackSupport(i)"></button>
+                </div>
+          </div>
+        <hr class="hr-blue" >
+      </div>
+    </tab>
+
 
     <tab heading="McGill AirPressure">
       <div class="card card-block card-outline-primary ">
