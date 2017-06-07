@@ -809,6 +809,358 @@
       </div>
     </tab>
 
+    <!--Underground Design-->
+    <tab heading="Underground Design">
+      <div class="card card-block card-outline-primary ">
+        <h4 class="card-title">Underground Design Check</h4>
+        <hr class="hr-blue">
+        <span>This web tool checks if the supplied information can handle the calculated load.</span>
+        <hr class="hr-blue" ><br />
+        <form (ngSubmit)="onCalcUnderground()" #ugnd="ngForm">
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" >Duct Construction</label>
+            <div class="col-xs-3" *ngFor="let construction of constructions">
+                <input type="radio" id="ugnd-construction-input" [(ngModel)]="underground.spiral" name="construction" [value]="construction.value">{{construction.display}}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" >Load Type</label>
+            <div class="col-xs-2" *ngFor="let loadType of loadTypes">
+                <input type="radio" id="ugnd-loadtype-input" [(ngModel)]="underground.loadType" name="loadType" [value]="loadType.value">{{loadType.display}}
+            </div>
+          </div>
+          <div *ngIf="underground.loadType=='Longitudinal'" class="form-group row">
+            <label class="col-xs-4 col-form-label">Distributed Load (lb/ft)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="underground.distLoad" name="distLoad" #distLoad="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="distLoad.errors && (distLoad.dirty || distLoad.touched )">
+                <p *ngIf="distLoad.errors.required">
+                    The load is required
+                </p>
+                <p *ngIf="distLoad.errors.greaterThanZero">
+                    Load must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="underground.loadType=='Vehicle'" class="form-group row">
+            <label class="col-xs-4 col-form-label">Vehicle Weight (lb)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="underground.vehicle" name="vehicle" #vehicle="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="vehicle.errors && (vehicle.dirty || vehicle.touched )">
+                <p *ngIf="vehicle.errors.required">
+                    The weight is required
+                </p>
+                <p *ngIf="vehicle.errors.greaterThanZero">
+                    Weight must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="underground.loadType=='Vehicle'" class="form-group row">
+            <label class="col-xs-4 col-form-label">Contact Area (in2)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="underground.area" name="area" #area="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="area.errors && (area.dirty || area.touched )">
+                <p *ngIf="area.errors.required">
+                    The area is required
+                </p>
+                <p *ngIf="area.errors.greaterThanZero">
+                    Area must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" >Material</label>
+            <div class="col-xs-2" *ngFor="let material of materials">
+                <input type="radio" id="ugnd-material-input" [(ngModel)]="underground.material" name="material" [value]="material.value">{{material.display}}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Duct Diameter (inches)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="underground.diameter" name="diameter" #diameter4="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="diameter4.errors && (diameter4.dirty || diameter4.touched )">
+                <p *ngIf="diameter4.errors.required">
+                    The Diameter is required
+                </p>
+                <p *ngIf="diameter4.errors.greaterThanZero">
+                    Diameter must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" >Gauge</label>
+            <div class="col-xs-4">
+              <div class="col-xs-8" *ngFor="let gauge of gauges">
+                  <input type="radio" id="ugnd-ingauge-input" [(ngModel)]="underground.gauge" name="Gauge" [value]="gauge.value">{{gauge.display}}
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Soil Density (lb/in3)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="underground.density" name="density" #density="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="density.errors && (density.dirty || density.touched )">
+                <p *ngIf="density.errors.required">
+                    The density is required
+                </p>
+                <p *ngIf="density.errors.greaterThanZero">
+                    Density must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Depth (ft)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="underground.depth" name="depth" #depth="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="depth.errors && (depth.dirty || depth.touched )">
+                <p *ngIf="depth.errors.required">
+                    The depth is required
+                </p>
+                <p *ngIf="depth.errors.greaterThanZero">
+                    Depth must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Soil Modulus (psi)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="underground.modulus" name="modulus" #modulus="ngModel"  (click)="$event.target.select()"/>
+            </div>
+          </div>
+          <div class="form-group row">
+            <button [disabled]="ugnd.invalid" type="submit" class="btn-space btn btn-success">Calculate</button> 
+          </div>
+        </form>
+
+        <form (ngSubmit)="onSaveResultsUnderground()" #r5="ngForm">
+          <!-- Calculate Underground Design Results -->
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Results: &nbsp;&nbsp;
+            </label>
+            <div class="col-xs-8">
+              <span>Soil Load: &nbsp; {{underground.soilLoad}} &nbsp; psi</span><br />
+              <span>External Load: &nbsp; {{underground.externalLoad}} &nbsp; psi</span><br />
+              <span>Total Load: &nbsp; {{underground.totalLoad}} &nbsp; psi</span><br />
+              <span>Deflection: &nbsp; {{underground.deflection}} &nbsp; in</span><br />
+              <span>Max Depth: &nbsp; {{underground.maxDepth}} &nbsp; ft</span><br />
+              <span>Pass/Fail: &nbsp; {{underground.passFail}}</span><br />
+            </div>
+          </div>
+          <!-- Calculate Underground Results -->
+          <div class="form-group row">
+            <button type="submit" class="btn-space btn btn-info">Save Result</button> 
+          </div>
+        </form>
+        <hr class="hr-blue" >
+          <!--Saved Results-->
+          <div class="row">
+                <div class = "col-xs-12" *ngFor="let result of savedResultsUnderground; let i = index">
+                  <div class = "col-xs-1">{{result.Spiral}}</div>
+                  <div class = "col-xs-1">{{result.LoadType}}</div>
+                  <div class = "col-xs-1">{{result.DistLoad}}</div>
+                  <div class = "col-xs-1">{{result.Vehicle}}</div>
+                  <div class = "col-xs-1">{{result.Area}}</div>
+                  <div class = "col-xs-1">{{result.Material}}</div>
+                  <div class = "col-xs-1">{{result.Diameter}}</div>
+                  <div class = "col-xs-1">{{result.Gauge}}</div>
+                  <div class = "col-xs-1">{{result.Density}}</div>
+                </div>
+          </div>
+          <div class="row">
+                <div class = "col-xs-12" *ngFor="let result of savedResultsUnderground; let i = index">
+                  <div class = "col-xs-1">{{result.Depth}}</div>
+                  <div class = "col-xs-1">{{result.Modulus}}</div>
+                  <div class = "col-xs-1">{{result.SoilLoad}}</div>
+                  <div class = "col-xs-1">{{result.ExternalLoad}}</div>
+                  <div class = "col-xs-1">{{result.TotalLoad}}</div>
+                  <div class = "col-xs-1">{{result.Deflection}}</div>
+                  <div class = "col-xs-1">{{result.MaxDepth}}</div>
+                  <div class = "col-xs-1">{{result.PassFail}}</div>
+                  <div *ngIf="result.Spiral=='Spiral'" class = "col-xs-1">Remove?</div>
+                  <button *ngIf="result.Spiral!='Spiral'" class = "col-xs-1 fa fa-trash" (click)="onRemoveUnderground(i)"></button>
+                </div>
+          </div>
+        <hr class="hr-blue" >
+      </div>
+    </tab>
+
+    <!--Thermal Data Design-->
+    <tab heading="Thermal Data">
+      <div class="card card-block card-outline-primary ">
+        <h4 class="card-title">Calculate Thermal Data</h4>
+        <hr class="hr-blue">
+        <span>This web tool makes thermal calculations for single and double-wall, round duct. Calculations are based on equations and methodology given in Engineering Report Volume 2, Number 11, as published by United McGill in 1990. Note that results may differ from the Engineering Report due to rounding error.</span>
+        <span>Though the specific heat of air, Cp, is also a function of temperature, it is held constant at 0.24 Btu/lbm/°F which is adequate for temperatures up to 500°F.</span>
+        <hr class="hr-blue" ><br />
+        <form (ngSubmit)="onCalcThermalData()" #thd="ngForm">
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Duct Insulation</label>
+            <div class="col-xs-4">
+              <div class="col-xs-8" *ngFor="let insulation of insulations">
+                <input type="radio" id="insulation-input" [(ngModel)]="thermalData.insulation" name="insulation" [value]="insulation.value">{{insulation.display}}
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Ambient Wind (mph)</label>
+            <div class="col-xs-4">
+              <div class="col-xs-8" *ngFor="let wind of winds">
+                <input type="radio" id="wind-input" [(ngModel)]="thermalData.wind" name="wind" [value]="wind.value">{{wind.display}}
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Inner Diameter (inches)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="thermalData.diameter" name="diameter" #diameter5="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="diameter5.errors && (diameter5.dirty || diameter5.touched )">
+                <p *ngIf="diameter5.errors.required">
+                    The Diameter is required
+                </p>
+                <p *ngIf="diameter5.errors.greaterThanZero">
+                    Diameter must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Volume Flow Rate (cfm)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="thermalData.flowRate" name="flowRate" #flowRate="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="flowRate.errors && (flowRate.dirty || flowRate.touched )">
+                <p *ngIf="flowRate.errors.required">
+                    The flow rate is required
+                </p>
+                <p *ngIf="flowRate.errors.greaterThanZero">
+                    Flow rate must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Inside Duct Temp (F)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="thermalData.insideDuctTemp" name="insideDuctTemp" #insideDuctTemp="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="insideDuctTemp.errors && (insideDuctTemp.dirty || insideDuctTemp.touched )">
+                <p *ngIf="insideDuctTemp.errors.required">
+                    The temp is required
+                </p>
+                <p *ngIf="insideDuctTemp.errors.greaterThanZero">
+                    Temp must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Ambient Temp (F)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="thermalData.ambientTemp" name="ambientTemp" #ambientTemp="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="ambientTemp.errors && (ambientTemp.dirty || ambientTemp.touched )">
+                <p *ngIf="ambientTemp.errors.required">
+                    The temp is required
+                </p>
+                <p *ngIf="ambientTemp.errors.greaterThanZero">
+                    Temp must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Duct Length (ft)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="thermalData.ductLength" name="ductLength" #ductLength="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="ductLength.errors && (ductLength.dirty || ductLength.touched )">
+                <p *ngIf="ductLength.errors.required">
+                    The length is required
+                </p>
+                <p *ngIf="ductLength.errors.greaterThanZero">
+                    Length must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Ambient % Relative Humidity</label>
+            <div class="col-xs-4">
+              <div class="col-xs-8" *ngFor="let humidity of humidities">
+                <input type="radio" id="humidity-input" [(ngModel)]="thermalData.humidity" name="humidity" [value]="humidity.value">{{humidity.display}}
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <button [disabled]="thd.invalid" type="submit" class="btn-space btn btn-success">Calculate</button> 
+          </div>
+        </form>
+
+        <form (ngSubmit)="onSaveResultsThermalData()" #r6="ngForm">
+          <!-- Calculate ThermalData Design Results -->
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Results: &nbsp;&nbsp;
+            </label>
+            <div class="col-xs-8">
+              <span>Estimated Heat Transfer: &nbsp; {{thermalData.heatTransfer}} &nbsp; btu/hour</span><br />
+              <span>Estimated Skin Temp: &nbsp; {{thermalData.skinTemp}} &nbsp; F</span><br />
+              <span>Estimated Exit Temp: &nbsp; {{thermalData.exitTemp}} &nbsp; F</span><br />
+              <span>Ambient Dew Point Temp: &nbsp; {{thermalData.dewpointTemp}} &nbsp; F</span><br />
+              <span>Condensation Likelihood: &nbsp; {{thermalData.condensation}}</span><br />
+              <span>Thermal Conductivity: &nbsp; {{thermalData.conductivity}} &nbsp; k</span><br />
+              <span>In-duct Air Density: &nbsp; {{thermalData.density}} &nbsp; lb/ft2</span><br />
+            </div>
+          </div>
+          <!-- Calculate thermalData Results -->
+          <div class="form-group row">
+            <button type="submit" class="btn-space btn btn-info">Save Result</button> 
+          </div>
+        </form>
+        <hr class="hr-blue" >
+          <!--Saved Results-->
+          <div class="row">
+                <div class = "col-xs-12" *ngFor="let result of savedResultsThermalData; let i = index">
+                  <div class = "col-xs-1">{{result.Insulation}}</div>
+                  <div class = "col-xs-1">{{result.Wind}}</div>
+                  <div class = "col-xs-1">{{result.Diameter}}</div>
+                  <div class = "col-xs-1">{{result.FlowRate}}</div>
+                  <div class = "col-xs-1">{{result.InsideDuctTemp}}</div>
+                  <div class = "col-xs-1">{{result.AmbientTemp}}</div>
+                  <div class = "col-xs-1">{{result.DuctLength}}</div>
+                  <div class = "col-xs-1">{{result.Humidity}}</div>
+                </div>
+          </div>
+          <div class="row">
+                <div class = "col-xs-12" *ngFor="let result of savedResultsThermalData; let i = index">
+                  <div class = "col-xs-1">{{result.HeatTransfer}}</div>
+                  <div class = "col-xs-1">{{result.SkinTemp}}</div>
+                  <div class = "col-xs-1">{{result.ExternalLoad}}</div>
+                  <div class = "col-xs-1">{{result.ExitTemp}}</div>
+                  <div class = "col-xs-1">{{result.DewpointTemp}}</div>
+                  <div class = "col-xs-1">{{result.Condensation}}</div>
+                  <div class = "col-xs-1">{{result.Conductivity}}</div>
+                  <div class = "col-xs-1">{{result.Density}}</div>
+                  <div *ngIf="result.Insulation=='Ins.'" class = "col-xs-1">Remove?</div>
+                  <button *ngIf="result.Insulation!='Ins.'" class = "col-xs-1 fa fa-trash" (click)="onRemoveThermalData(i)"></button>
+                </div>
+          </div>
+        <hr class="hr-blue" >
+      </div>
+    </tab>
 
     <tab heading="McGill AirPressure">
       <div class="card card-block card-outline-primary ">

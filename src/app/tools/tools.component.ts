@@ -5,6 +5,8 @@ import { IDuctConvert } from '../models/duct-convert';
 import { ICalcOperatingPressure } from '../models/operating-pressure';
 import { ISupportDesign } from '../models/support-design';
 import { IStackDesign } from '../models/stack-design';
+import { IUnderground } from '../models/underground';
+import { IThermalData } from '../models/thermal-data';
 
 @Component({
   //selector: 'app-tools',
@@ -47,6 +49,12 @@ export class ToolsComponent implements OnInit {
     { value: 3, display: '3 in. Accousti-K27' }
   ];
 
+  public loadTypes = [
+    { value: 'Longitudinal', display: 'Longitudinal Distributed Load' },
+    { value: 'Vehicle', display: 'Vehicle Load and Contact Area'},
+    { value: 'None', display: 'None'}
+  ];
+
   public materials = [
     { value: 'Steel', display: 'Galvanized Steel'},
     { value: 'Stainless Steel', display: 'Stainless Steel'},
@@ -78,6 +86,59 @@ export class ToolsComponent implements OnInit {
     {value: 'Class B', display: 'Class B'},
     {value: 'Class C', display: 'Class C'},
     {value: 'Class D', display: 'Class D'}
+  ];
+
+  public winds = [
+    { value: 0, display: '0'},
+    { value: 15,display: '15'}
+  ];
+
+  public humidities = [
+    { value: 10, display: '10'},
+    { value: 30, display: '30'},
+    { value: 50, display: '50'},
+    { value: 70, display: '70'},
+    { value: 90, display: '90'}
+  ];
+
+  public savedResultsThermalData = [
+    { Insulation: 'Ins.',
+      Wind: 'Wind',
+      Diameter: 'Dia',
+      FlowRate: 'Flow',
+      InsideDuctTemp: 'InTmp',
+      AmbientTemp: 'OutTmp.',
+      DuctLength: 'Len',
+      Humidity: 'Hmdty',
+      HeatTransfer: 'Heat',
+      SkinTemp: 'Skin',
+      ExitTemp: 'Exit',
+      DewpointTemp: 'Dew',
+      Condensation: 'Cndnst',
+      Conductivity: 'Cndctv',
+      Density: 'Dens'
+    }
+  ];
+
+  public savedResultsUnderground = [
+    { Spiral: 'Spiral',
+      LoadType: 'Type',
+      DistLoad: 'DLoad',
+      Vehicle: 'Vehcl',
+      Area: 'Area',
+      Material: 'Mat.',
+      Diameter: 'Dia',
+      Gauge: 'Ga.',
+      Density: 'Dnsty',
+      Depth: 'Depth',
+      Modulus: 'Mod',
+      SoilLoad: 'SLoad',
+      ExternalLoad: 'ELoad',
+      TotalLoad: 'TLoad',
+      Deflection: 'Def.',
+      MaxDepth: 'Max Dep',
+      PassFail: 'Pass?'
+    }
   ];
 
   public savedResultsStack = [
@@ -211,6 +272,44 @@ export class ToolsComponent implements OnInit {
     materialLoad : 0
   };
 
+  public underground : IUnderground = {
+    spiral : this.constructions[0].value,
+    loadType : this.loadTypes[0].value,
+    distLoad : 0,
+    vehicle : 0,
+    area : 0,
+    material : this.materials[0].value,
+    diameter : 0,
+    gauge : this.gauges[0].value,
+    density : 0,
+    depth: 0,
+    modulus: 0,
+    soilLoad: 0,
+    externalLoad: 0,
+    totalLoad: 0,
+    deflection: 0,
+    maxDepth: 0,
+    passFail: 'Pass'
+  };
+
+  public thermalData : IThermalData = {
+    insulation : this.insulations[0].value,
+    wind : this.winds[0].value,
+    diameter : 0,
+    flowRate : 0,
+    insideDuctTemp : 0,
+    ambientTemp : 0,
+    ductLength : 0,
+    humidity : 0,
+    heatTransfer : 0,
+    skinTemp : 0,  
+    exitTemp : 0,
+    dewpointTemp : 0,
+    condensation : '',
+    conductivity : 0,
+    density : 0
+  };
+
   constructor( private toolsService: ToolsService) {
     //this.active = true;
    }
@@ -319,6 +418,82 @@ export class ToolsComponent implements OnInit {
             console.log("error");
           }
       })
+  }
+
+  public onCalcUnderground() {
+    this.toolsService.calcUnderground(this.underground)
+      .subscribe((data:IUnderground) => {
+          if ( data ){
+            // console.log(data);
+            // console.log(this.ductConvert);
+            // const duct = JSON.stringify(data);
+            this.underground = data;
+            // console.log(this.ductConvert);
+          } else {
+            console.log("error");
+          }
+      })
+  }
+
+  public onCalcThermalData() {
+    this.toolsService.calcThermalData(this.thermalData)
+      .subscribe((data:IThermalData) => {
+          if ( data ){
+            // console.log(data);
+            // console.log(this.ductConvert);
+            // const duct = JSON.stringify(data);
+            this.thermalData = data;
+            // console.log(this.ductConvert);
+          } else {
+            console.log("error");
+          }
+      })
+  }
+
+  public onSaveResultsThermalData() {
+    var saveResult = {
+      Insulation: String(this.thermalData.insulation),
+      Wind: String(this.thermalData.wind),
+      Diameter: String(this.thermalData.diameter),
+      FlowRate: String(this.thermalData.flowRate),
+      InsideDuctTemp: String(this.thermalData.insideDuctTemp),
+      AmbientTemp: String(this.thermalData.ambientTemp),
+      DuctLength: String(this.thermalData.ductLength),
+      Humidity: String(this.thermalData.humidity),
+      HeatTransfer: String(this.thermalData.heatTransfer),
+      SkinTemp: String(this.thermalData.skinTemp),
+      ExitTemp: String(this.thermalData.exitTemp),
+      DewpointTemp: String(this.thermalData.dewpointTemp),
+      Condensation: String(this.thermalData.condensation),
+      Conductivity: String(this.thermalData.conductivity),
+      Density: String(this.thermalData.density)
+    }
+    
+    this.savedResultsThermalData.push(saveResult);
+  }
+
+  public onSaveResultsUnderground() {
+    var saveResult = {
+      Spiral: String(this.underground.spiral),
+      LoadType: String(this.underground.loadType),
+      DistLoad: String(this.underground.distLoad),
+      Vehicle: String(this.underground.vehicle),
+      Area: String(this.underground.area),
+      Material: String(this.underground.material),
+      Diameter: String(this.underground.diameter),
+      Gauge: String(this.underground.gauge),
+      Density: String(this.underground.density),
+      Depth: String(this.underground.depth),
+      Modulus: String(this.underground.modulus),
+      SoilLoad: String(this.underground.soilLoad),
+      ExternalLoad: String(this.underground.externalLoad),
+      TotalLoad: String(this.underground.totalLoad),
+      Deflection: String(this.underground.deflection),
+      MaxDepth: String(this.underground.maxDepth),
+      PassFail: String(this.underground.passFail)
+    }
+    
+    this.savedResultsUnderground.push(saveResult);
   }
 
   public onSaveResultsStackDesign(){
@@ -455,6 +630,14 @@ export class ToolsComponent implements OnInit {
 
   public onRemoveStackSupport(i){
     this.savedResultsStack.splice(i,1);
+  }
+
+  public onRemoveUnderground(i){
+    this.savedResultsUnderground.splice(i,1);
+  }
+
+  public onRemoveThermalData(i){
+    this.savedResultsThermalData.splice(i,1);
   }
 
 }

@@ -6,6 +6,8 @@ import { IDuctConvert } from '../models/duct-convert';
 import { ICalcOperatingPressure } from '../models/operating-pressure'
 import { ISupportDesign } from '../models/support-design'
 import { IStackDesign } from '../models/stack-design'
+import { IUnderground } from '../models/underground'
+import { IThermalData } from '../models/thermal-data';
 
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/map';
@@ -146,6 +148,48 @@ export class ToolsService{
         let bodyString = JSON.stringify(calcSupport); // Stringify payload
         let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let url = this.config.apiUrl+"/support";
+
+        return this.http.post(url, bodyString, {headers:headers})
+        .map((res:Response) => {
+            let data = res.json();
+            //console.log('test: '+data);
+            // Fix enums
+            //let duct = DuctType[data.type];
+            //data.type = duct;
+
+            return data;
+        })      
+        .catch(this._handleError);
+       
+        //alert(url + ":" + bodyString);
+    }    
+
+    public calcUnderground(calcUnderground : IUnderground) : Observable<IUnderground>{
+       
+        let bodyString = JSON.stringify(calcUnderground); // Stringify payload
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let url = this.config.apiUrl+"/underground";
+
+        return this.http.post(url, bodyString, {headers:headers})
+        .map((res:Response) => {
+            let data = res.json();
+            //console.log('test: '+data);
+            // Fix enums
+            //let duct = DuctType[data.type];
+            //data.type = duct;
+
+            return data;
+        })      
+        .catch(this._handleError);
+       
+        //alert(url + ":" + bodyString);
+    }    
+
+    public calcThermalData(calcThermalData : IThermalData) : Observable<IThermalData>{
+       
+        let bodyString = JSON.stringify(calcThermalData); // Stringify payload
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let url = this.config.apiUrl+"/thermaldata";
 
         return this.http.post(url, bodyString, {headers:headers})
         .map((res:Response) => {

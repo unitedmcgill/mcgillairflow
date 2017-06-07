@@ -8,7 +8,7 @@ import { ToolsRoutingModule }       from './tools-routing.module';
 import { ToolsService }             from './tools.service';
 
 import { GreaterThanZeroValidator } from '../shared/greaterthanzero.validator';
-import { NonZeroValidator }                  from '../shared/nonzero.validator';
+import { NonZeroValidator }         from '../shared/nonzero.validator';
 
 @NgModule({
     imports: [
