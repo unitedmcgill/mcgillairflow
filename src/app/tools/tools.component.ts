@@ -7,6 +7,7 @@ import { ISupportDesign } from '../models/support-design';
 import { IStackDesign } from '../models/stack-design';
 import { IUnderground } from '../models/underground';
 import { IThermalData } from '../models/thermal-data';
+import { IReinforcement } from '../models/reinforcement';
 
 @Component({
   //selector: 'app-tools',
@@ -29,6 +30,32 @@ export class ToolsComponent implements OnInit {
     { value: 0, display: 'Round'},
     { value: 1, display: 'Rectangular'},
     { value: 2, display: 'Flat Oval'}
+  ];
+
+  public ductTypes = [
+    { value: 'Rectangular', display: 'Rectangular'},
+    { value: 'Spiral Oval', display: 'Spiral Oval'},
+    { value: 'Longseam Oval', display: 'Longseam Oval'}
+  ];
+
+  public calcTypes = [
+    {value: 'Gauge', display: 'Calculate Gauge'},
+    {value: 'Reinforcement', display: 'Calculate Reinforcement'}
+  ];
+
+  public pressureClasses = [
+    {value: '05', display: '+/- 0.5'},
+    {value: '1', display:  '+/- 1'},
+    {value: '2', display:  '+/- 2'},
+    {value: '3', display:  '+/- 3'},
+    {value: '4', display:  '+/- 4'},
+    {value: '6', display:  '+/- 6'},
+    {value: '10', display: '+/- 10'}
+  ];
+
+  public applications = [
+    {value: 'Exhaust', display:  'Exhaust'},
+    {value: 'Supply', display:  'Supply'}
   ];
 
   public pressures = [
@@ -75,6 +102,27 @@ export class ToolsComponent implements OnInit {
     { value: 8, display: '8 ga'}
   ];
 
+  public gauges2 = [
+    { value: 26, display: '26 ga (0.0295 in.)'},
+    { value: 24, display: '24 ga (0.0370 in.)'},
+    { value: 22, display: '22 ga (0.0460 in.)'},
+    { value: 20, display: '20 ga (0.0590 in.)'},
+    { value: 18, display: '18 ga (0.0760 in.)'},
+    { value: 16, display: '16 ga (0.0860 in.)'}
+  ];
+
+  public reinforcements = [
+    { value: 0, display: 'None'},
+    { value: 1, display: '10'},
+    { value: 2, display: '8'},
+    { value: 3, display: '6'},
+    { value: 4, display: '5'},
+    { value: 5, display: '4'},
+    { value: 6, display: '3'},
+    { value: 7, display: '2.5'},
+    { value: 8, display: '2'}
+  ];
+
   public loads = [
     { value: 0.0, display: 'Empty Duct (Air)'},
     { value: 0.5, display: 'Half Full Duct'},
@@ -99,6 +147,21 @@ export class ToolsComponent implements OnInit {
     { value: 50, display: '50'},
     { value: 70, display: '70'},
     { value: 90, display: '90'}
+  ];
+
+  public savedResultsReinforcement = [
+    { DuctType: 'Type',
+      CalcType: 'Calc',
+      PressureClass: 'PClass',
+      Application: 'App',
+      Minor: 'Min',
+      Major: 'Maj',
+      Gauge: 'Ga.',
+      SelectedReinforcement: 'Space',
+      MinorReinforcement: 'MinR',
+      MajorReinforcement: 'MajR',
+      CalculatedGauge: 'CalcGa.'
+    }
   ];
 
   public savedResultsThermalData = [
@@ -310,6 +373,20 @@ export class ToolsComponent implements OnInit {
     density : 0
   };
 
+  public reinforcement : IReinforcement = {
+    ductType : this.ductTypes[0].value,
+    calcType : this.calcTypes[0].value,
+    pressureClass : this.pressureClasses[0].value,
+    application : this.applications[0].value,
+    minor : 0,
+    major : 0,
+    gauge : this.gauges2[0].value,
+    selectedReinforcement : 0,
+    minorReinforcement : '',
+    majorReinforcement : '',
+    calculatedGauge : 0
+  };
+
   constructor( private toolsService: ToolsService) {
     //this.active = true;
    }
@@ -449,6 +526,40 @@ export class ToolsComponent implements OnInit {
           }
       })
   }
+
+  public onCalcReinforcement() {
+    this.toolsService.calcReinforcement(this.reinforcement)
+      .subscribe((data:IReinforcement) => {
+          if ( data ){
+            // console.log(data);
+            // console.log(this.ductConvert);
+            // const duct = JSON.stringify(data);
+            this.reinforcement = data;
+            // console.log(this.ductConvert);
+          } else {
+            console.log("error");
+          }
+      })
+  }
+
+  public onSaveResultsReinforcement() {
+    var saveResult = {
+      DuctType: String(this.reinforcement.ductType),
+      CalcType: String(this.reinforcement.calcType),
+      PressureClass: String(this.reinforcement.pressureClass),
+      Application: String(this.reinforcement.application),
+      Minor: String(this.reinforcement.minor),
+      Major: String(this.reinforcement.major),
+      Gauge: String(this.reinforcement.gauge),
+      SelectedReinforcement: String(this.reinforcement.selectedReinforcement),
+      MinorReinforcement: String(this.reinforcement.minorReinforcement),
+      MajorReinforcement: String(this.reinforcement.majorReinforcement),
+      CalculatedGauge: String(this.reinforcement.calculatedGauge),
+    }
+    
+    this.savedResultsReinforcement.push(saveResult);
+  }
+
 
   public onSaveResultsThermalData() {
     var saveResult = {
@@ -638,6 +749,10 @@ export class ToolsComponent implements OnInit {
 
   public onRemoveThermalData(i){
     this.savedResultsThermalData.splice(i,1);
+  }
+
+  public onRemoveReinforcement(i){
+    this.savedResultsReinforcement.splice(i,1);
   }
 
 }

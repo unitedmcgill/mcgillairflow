@@ -1162,6 +1162,137 @@
       </div>
     </tab>
 
+    <!--Rect/Oval Reinforcement Design-->
+    <tab heading="Reinforcement">
+      <div class="card card-block card-outline-primary ">
+        <h4 class="card-title">Flat Oval and Rectangular Duct Reinforcement</h4>
+        <hr class="hr-blue">
+        <span>This web tool calculates the gauge or reinforcement needed for flat oval or rectangular duct.</span>
+        <hr class="hr-blue" ><br />
+        <form (ngSubmit)="onCalcReinforcement()" #reinf="ngForm">
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Duct Construction</label>
+            <div class="col-xs-4">
+              <div class="col-xs-8" *ngFor="let ductType of ductTypes">
+                <input type="radio" id="ductType-input" [(ngModel)]="reinforcement.ductType" name="ductType" [value]="ductType.value">{{ductType.display}}
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Calculation Type</label>
+            <div class="col-xs-4">
+              <div class="col-xs-8" *ngFor="let calcType of calcTypes">
+                <input type="radio" id="calcType-input" [(ngModel)]="reinforcement.calcType" name="calcType" [value]="calcType.value">{{calcType.display}}
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Pressure Class (in wg)</label>
+            <div class="col-xs-4">
+              <div class="col-xs-8" *ngFor="let pressureClass of pressureClasses">
+                <input type="radio" id="pressureClass-input" [(ngModel)]="reinforcement.pressureClass" name="pressureClass" [value]="pressureClass.value">{{pressureClass.display}}
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Application</label>
+            <div class="col-xs-4">
+              <div class="col-xs-8" *ngFor="let application of applications">
+                <input type="radio" id="application-input" [(ngModel)]="reinforcement.application" name="application" [value]="application.value">{{application.display}}
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Minor (inches)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="reinforcement.minor" name="minor" #minor="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="minor.errors && (minor.dirty || minor.touched )">
+                <p *ngIf="minor.errors.required">
+                    The minor is required
+                </p>
+                <p *ngIf="minor.errors.greaterThanZero">
+                    Minor must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Major (inches)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="reinforcement.major" name="major" #major="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="major.errors && (major.dirty || major.touched )">
+                <p *ngIf="major.errors.required">
+                    The major is required
+                </p>
+                <p *ngIf="major.errors.greaterThanZero">
+                    Major must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="reinforcement.calcType=='Gauge'" class="form-group row">
+            <label class="col-xs-4 col-form-label">Reinforcement Spacing (ft)</label>
+            <div class="col-xs-4">
+              <div class="col-xs-8" *ngFor="let reinforcementItem of reinforcements">
+                <input type="radio" id="reinforcementItem-input" [(ngModel)]="reinforcement.selectedReinforcement" name="reinforcementItem" [value]="reinforcementItem.value">{{reinforcementItem.display}}
+              </div>
+            </div>
+          </div>
+          <div *ngIf="reinforcement.calcType=='Reinforcement'" class="form-group row">
+            <label class="col-xs-4 col-form-label">Gauge</label>
+            <div class="col-xs-4">
+              <div class="col-xs-8" *ngFor="let gauge of gauges2">
+                <input type="radio" id="gauge-input" [(ngModel)]="reinforcement.gauge" name="gauge" [value]="gauge.value">{{gauge.display}}
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <button [disabled]="reinf.invalid" type="submit" class="btn-space btn btn-success">Calculate</button> 
+          </div>
+        </form>
+
+        <form (ngSubmit)="onSaveResultsReinforcement()" #r7="ngForm">
+          <!-- Calculate Reinforcement Design Results -->
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Results: &nbsp;&nbsp;
+            </label>
+            <div class="col-xs-8">
+              <span>Minor Reinforcement: &nbsp; {{reinforcement.minorReinforcement}} &nbsp; ft</span><br />
+              <span>Major Reinforcement: &nbsp; {{reinforcement.majorReinforcement}} &nbsp; ft</span><br />
+              <span>Calculated Gauge: &nbsp; {{reinforcement.calculatedGauge}}</span><br />
+            </div>
+          </div>
+          <!-- Calculate Reinforcement Results -->
+          <div class="form-group row">
+            <button type="submit" class="btn-space btn btn-info">Save Result</button> 
+          </div>
+        </form>
+        <hr class="hr-blue" >
+          <!--Saved Results-->
+          <div class="row">
+                <div class = "col-xs-12" *ngFor="let result of savedResultsReinforcement; let i = index">
+                  <div class = "col-xs-1">{{result.DuctType}}</div>
+                  <div class = "col-xs-1">{{result.CalcType}}</div>
+                  <div class = "col-xs-1">{{result.PressureClass}}</div>
+                  <div class = "col-xs-1">{{result.Application}}</div>
+                  <div class = "col-xs-1">{{result.Minor}}</div>
+                  <div class = "col-xs-1">{{result.Major}}</div>
+                  <div class = "col-xs-1">{{result.Gauge}}</div>
+                  <div class = "col-xs-1">{{result.SelectedReinforcement}}</div>
+                  <div class = "col-xs-1">{{result.MinorReinforcement}}</div>
+                  <div class = "col-xs-1">{{result.MajorReinforcement}}</div>
+                  <div class = "col-xs-1">{{result.CalculatedGauge}}</div>
+                  <div *ngIf="result.DuctType=='Type'" class = "col-xs-1">Remove?</div>
+                  <button *ngIf="result.DuctType!='Type'" class = "col-xs-1 fa fa-trash" (click)="onRemoveReinforcement(i)"></button>
+                </div>
+          </div>
+        <hr class="hr-blue" >
+      </div>
+    </tab>
+
+
     <tab heading="McGill AirPressure">
       <div class="card card-block card-outline-primary ">
         <h4 class="card-title card-accent-primary">Locations</h4>
