@@ -8,6 +8,7 @@ import { IStackDesign } from '../models/stack-design';
 import { IUnderground } from '../models/underground';
 import { IThermalData } from '../models/thermal-data';
 import { IReinforcement } from '../models/reinforcement';
+import { IOrificeTube } from '../models/orifice-tube';
 
 @Component({
   //selector: 'app-tools',
@@ -15,6 +16,11 @@ import { IReinforcement } from '../models/reinforcement';
   styleUrls: ['./tools.component.scss']
 })
 export class ToolsComponent implements OnInit {
+
+  public yesno = [
+    { value: '1', display: 'Yes'},
+    { value: '0', display: 'No'}
+  ];
 
   public burstCollapse = [
     { value: 'burst', display: 'Calcualte Burst'},
@@ -147,6 +153,21 @@ export class ToolsComponent implements OnInit {
     { value: 50, display: '50'},
     { value: 70, display: '70'},
     { value: 90, display: '90'}
+  ];
+
+  public savedResultsOrificeTube = [
+    { TestPressure: 'Press',
+      CFM: 'CFM',
+      Plate: 'Plate',
+      TubeDiameter: 'TDia.',
+      OrificeDiameter: 'ODia.',
+      BetaRatio: 'Beta',
+      OpenArea: 'Area',
+      FlowRate: 'Flow',
+      PressureDropOrifice: 'PDO',
+      PressureDropPlate: 'PDP',
+      FanPressure: 'Fan'
+    }
   ];
 
   public savedResultsReinforcement = [
@@ -387,6 +408,17 @@ export class ToolsComponent implements OnInit {
     calculatedGauge : 0
   };
 
+  public orificetube : IOrificeTube = {
+    testPressure : 0,
+    cfm : 0,
+    plate : this.yesno[0].value,
+    tubeDiameter : 4,
+    orificeDiameter : 1.5,
+    betaRatio : 0,
+    openArea : '',
+    tubeList : ''
+  };
+
   constructor( private toolsService: ToolsService) {
     //this.active = true;
    }
@@ -540,6 +572,132 @@ export class ToolsComponent implements OnInit {
             console.log("error");
           }
       })
+  }
+
+  public onCalcOrificeTube() {
+    this.toolsService.calcOrificeTube(this.orificetube)
+      .subscribe((data:IOrificeTube) => {
+          if ( data ){
+            // console.log(data);
+            // console.log(this.ductConvert);
+            // const duct = JSON.stringify(data);
+            this.orificetube = data;
+            // console.log(this.ductConvert);
+          } else {
+            console.log("error");
+          }
+      })
+  }
+
+
+  public onSaveResultsOrificeTube(i) {
+    var saveResult = {
+      TestPressure: String(this.orificetube.testPressure),
+      CFM: String(this.orificetube.cfm),
+      Plate: String(this.orificetube.plate),
+      TubeDiameter: String(this.orificetube.tubeDiameter),
+      OrificeDiameter: String(this.orificetube.orificeDiameter),
+      BetaRatio: String(this.orificetube.betaRatio),
+      OpenArea: String(this.orificetube.openArea),
+      FlowRate: String(this.orificetube.tubeList[i][0]),
+      PressureDropOrifice: String(this.orificetube.tubeList[i][1]),
+      PressureDropPlate: String(this.orificetube.tubeList[i][2]),
+      FanPressure: String(this.orificetube.tubeList[i][3])
+    }
+    
+    this.savedResultsOrificeTube.push(saveResult);
+  }
+
+  public upTheTube(){
+    var td = this.orificetube.tubeDiameter + 1;
+    var br = this.orificetube.orificeDiameter / td;
+    if (td > 99) {
+        td = 99;
+    }
+
+    if (br >= 0.8) {
+        td += 2;
+    }
+    else if (br <= 0.09) {
+        td -= 1;
+    }
+
+    if (td > 6 && td % 2 == 1) {
+        td++;
+    }
+
+    if ( td != this.orificetube.tubeDiameter)
+    {
+      this.orificetube.tubeDiameter = +td.toFixed(1);
+      this.onCalcOrificeTube();
+    }
+  }
+
+  public downTheTube(){
+    var td = this.orificetube.tubeDiameter - 1;
+    var br = this.orificetube.orificeDiameter / td;
+
+    if (td < 4) {
+        td = 4;
+    }
+
+    if (br >= 0.8 && td >= 6) {
+        td += 3;
+    }
+    else if (br >= 0.8 && td < 6) {
+        td++;
+    }
+
+    if (br <= 0.09) {
+        td += 2;
+    }
+
+    if (td > 6 && td % 2 == 1) {
+        td--;
+    }
+
+    if ( td != this.orificetube.tubeDiameter) {
+      this.orificetube.tubeDiameter = +td.toFixed(1);
+      this.onCalcOrificeTube();
+    }
+  }
+
+  public upTheOrifice(delta){
+    var od = this.orificetube.orificeDiameter + delta;
+    var br = od / this.orificetube.tubeDiameter;
+
+    if (br >= 0.8) {
+        od -= delta;
+    }
+    else if (br <= 0.09) {
+        od += delta;
+    }
+
+    if (br <= 0.09 || br >= 0.8) {
+        od -= delta;
+    }
+
+    if (od != this.orificetube.orificeDiameter) {
+        this.orificetube.orificeDiameter = +od.toFixed(3);
+        this.onCalcOrificeTube();
+    }
+  }
+
+  public downTheOrifice(delta){
+    var od = this.orificetube.orificeDiameter - delta;
+    var br = od / this.orificetube.tubeDiameter;
+
+    if (br >= 0.8) {
+        od -= delta;
+    }
+    else if (br <= 0.09) {
+        od += delta;
+    }
+
+    if (od != this.orificetube.orificeDiameter) {
+        this.orificetube.orificeDiameter = +od.toFixed(3);
+        this.onCalcOrificeTube();
+    }
   }
 
   public onSaveResultsReinforcement() {
@@ -753,6 +911,10 @@ export class ToolsComponent implements OnInit {
 
   public onRemoveReinforcement(i){
     this.savedResultsReinforcement.splice(i,1);
+  }
+
+  public onRemoveOrificeTube(i){
+    this.savedResultsOrificeTube.splice(i,1);
   }
 
 }

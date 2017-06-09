@@ -11,5 +11,5 @@ export interface IReinforcement {
     selectedReinforcement : number, // int (reinforcements), if calcType = gauge
     minorReinforcement : string, // out
     majorReinforcement : string, // out
-    calculatedGauge : number, // int out
+    calculatedGauge : number // int out
 }

@@ -1292,6 +1292,119 @@
       </div>
     </tab>
 
+    <!--Orifice Tube-->
+    <tab heading="Orifice Tube">
+      <div class="card card-block card-outline-primary ">
+        <h4 class="card-title">Special Tube Designer Tool</h4>
+        <hr class="hr-blue">
+        <span>This web tool calculates the pressure drop across the orifice and diffuser plate and also calculates the fan pressure required.</span>
+        <hr class="hr-blue" ><br />
+        <form (ngSubmit)="onCalcOrificeTube()" #orifice="ngForm">
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">System test pressure (in wg)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="orificetube.testPressure" name="testPressure" #testPressure="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="testPressure.errors && (testPressure.dirty || testPressure.touched )">
+                <p *ngIf="testPressure.errors.required">
+                    The pressure is required
+                </p>
+                <p *ngIf="testPressure.errors.greaterThanZero">
+                    Pressure must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Maximum leakage to test (cfm)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="orificetube.cfm" name="cfm" #cfm="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="cfm.errors && (cfm.dirty || cfm.touched )">
+                <p *ngIf="cfm.errors.required">
+                    The max. leakage is required
+                </p>
+                <p *ngIf="cfm.errors.greaterThanZero">
+                    Maximum leakage must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Add diffuser plate?</label>
+            <div class="col-xs-4">
+              <div class="col-xs-8" *ngFor="let answer of yesno">
+                <input type="radio" id="plate-input" [(ngModel)]="orificetube.plate" name="plate" [value]="answer.value">{{answer.display}}
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <button [disabled]="orifice.invalid" type="submit" class="btn-space btn btn-success">Calculate</button> 
+          </div>
+        </form>
+
+        <form #r8="ngForm">
+          <!-- Calculate Orifice Tube Design Results -->
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Results: &nbsp;&nbsp;
+            </label>
+            <div class="col-xs-12">
+              <span>Tube Diameter: &nbsp; {{orificetube.tubeDiameter}} &nbsp; in 
+                <button class="btn-space btn btn-info fa fa-arrow-up" (click)="upTheTube()">
+                  </button> <button class="btn-space btn btn-info fa fa-arrow-down" (click)="downTheTube()"></button>
+              </span><br />
+              <span>Orifice Diameter: &nbsp; {{orificetube.orificeDiameter}} &nbsp; in
+                <button class="btn-space btn btn-info fa fa-arrow-up" (click)="upTheOrifice(.1)">.1</button>
+                <button class="btn-space btn btn-info fa fa-arrow-down" (click)="downTheOrifice(.1)">.1</button>
+                <button class="btn-space btn btn-info fa fa-arrow-up" (click)="upTheOrifice(.05)">.05</button>
+                <button class="btn-space btn btn-info fa fa-arrow-down" (click)="downTheOrifice(.05)">.05</button>
+              </span><br />
+              <span>Beta Ratio: &nbsp; {{orificetube.betaRatio}}</span><br />
+              <span>System Static pressure: &nbsp; {{orificetube.testPressure}} &nbsp; in wg</span><br />
+              <span>Allowed System Leakage: &nbsp; {{orificetube.cfm}} &nbsp; cfm</span><br />
+              <span>Perf Plate % Open Area: &nbsp; {{orificetube.openArea}} %</span><br />
+            </div>
+          </div>
+          <div class="row col-xs-12">
+            <div class = "col-xs-2">Flow Rate (cfm)</div>
+            <div class = "col-xs-2">Press. Drop Across Oriface (in wg)</div>
+            <div class = "col-xs-2">Press. Drop Across Plate (in wg)</div>
+            <div class = "col-xs-2">Fan Pressure Req. (in wg)</div>
+          </div>
+          <div class="row">
+                <div class = "col-xs-12" *ngFor="let tube of orificetube.tubeList; let i = index">
+                  <div class = "col-xs-2">{{tube[0]}}</div>
+                  <div class = "col-xs-2">{{tube[1]}}</div>
+                  <div class = "col-xs-2">{{tube[2]}}</div>
+                  <div class = "col-xs-2">{{tube[3]}}</div>
+                  <div class = "col-xs-2"><button class="btn-space btn btn-info" (click)="onSaveResultsOrificeTube(i)">Save Result</button></div>
+                </div>
+          </div>
+          <!-- Calculate Reinforcement Results -->
+        </form>
+        <hr class="hr-blue" >
+          <!--Saved Results-->
+          <div class="row">
+                <div class = "col-xs-12" *ngFor="let result of savedResultsOrificeTube; let i = index">
+                  <div class = "col-xs-1">{{result.TestPressure}}</div>
+                  <div class = "col-xs-1">{{result.CFM}}</div>
+                  <div class = "col-xs-1">{{result.Plate}}</div>
+                  <div class = "col-xs-1">{{result.TubeDiameter}}</div>
+                  <div class = "col-xs-1">{{result.OrificeDiameter}}</div>
+                  <div class = "col-xs-1">{{result.BetaRatio}}</div>
+                  <div class = "col-xs-1">{{result.OpenArea}}</div>
+                  <div class = "col-xs-1">{{result.FlowRate}}</div>
+                  <div class = "col-xs-1">{{result.PressureDropOrifice}}</div>
+                  <div class = "col-xs-1">{{result.PressureDropPlate}}</div>
+                  <div class = "col-xs-1">{{result.FanPressure}}</div>
+                  <div *ngIf="result.TestPressure=='Press'" class = "col-xs-1">Remove?</div>
+                  <button *ngIf="result.TestPressure!='Press'" class = "col-xs-1 fa fa-trash" (click)="onRemoveOrificeTube(i)"></button>
+                </div>
+          </div>
+        <hr class="hr-blue" >
+      </div>
+    </tab>
+
 
     <tab heading="McGill AirPressure">
       <div class="card card-block card-outline-primary ">

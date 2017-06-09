@@ -9,6 +9,7 @@ import { IStackDesign } from '../models/stack-design'
 import { IUnderground } from '../models/underground'
 import { IThermalData } from '../models/thermal-data';
 import { IReinforcement } from '../models/reinforcement';
+import { IOrificeTube } from '../models/orifice-tube';
 
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/map';
@@ -212,6 +213,27 @@ export class ToolsService{
         let bodyString = JSON.stringify(reinforcement); // Stringify payload
         let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let url = this.config.apiUrl+"/reinforcement";
+
+        return this.http.post(url, bodyString, {headers:headers})
+        .map((res:Response) => {
+            let data = res.json();
+            //console.log('test: '+data);
+            // Fix enums
+            //let duct = DuctType[data.type];
+            //data.type = duct;
+
+            return data;
+        })      
+        .catch(this._handleError);
+       
+        //alert(url + ":" + bodyString);
+    }    
+
+    public calcOrificeTube(orificetube : IOrificeTube) : Observable<IOrificeTube>{
+       
+        let bodyString = JSON.stringify(orificetube); // Stringify payload
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let url = this.config.apiUrl+"/orificetube";
 
         return this.http.post(url, bodyString, {headers:headers})
         .map((res:Response) => {
