@@ -10,6 +10,7 @@ import { IThermalData } from '../models/thermal-data';
 import { IReinforcement } from '../models/reinforcement';
 import { IOrificeTube } from '../models/orifice-tube';
 import { IDuctDFuser } from '../models/duct-d-fuser';
+import { IFactair } from '../models/factair';
 
 @Component({
   //selector: 'app-tools',
@@ -18,6 +19,32 @@ import { IDuctDFuser } from '../models/duct-d-fuser';
 })
 export class ToolsComponent implements OnInit {
 
+  public factairHz : string[] = ['63 Hz','125 Hz','250 Hz',
+                                 '500 Hz', '1000 Hz', '2000 Hz',
+                                 '4000 Hz', '8000 Hz'];
+  
+  public factairDistances = [
+     {value: 1, display: '1'},
+     {value: 2, display: '2'},
+     {value: 3, display: '3'},
+     {value: 4, display: '4'},
+     {value: 5, display: '5'},
+     {value: 6, display: '6'},
+     {value: 10, display: '10'}
+  ];
+  
+  public openclose = [
+    { value: 'Open', display: 'Open'},
+    { value: 'Close', display: 'Close'}
+  ];
+
+  public factairs = [
+    { value: 25, display: 'Model 25 (no ball/handle)' },
+    { value: 50, display: 'Model 50 (handle only)' },
+    { value: 75, display: 'Model 75 (ball only)' },
+    { value: 100, display: 'Model 100 (ball/handle)' }
+  ];
+  
   public yesno = [
     { value: '1', display: 'Yes'},
     { value: '0', display: 'No'}
@@ -186,6 +213,24 @@ export class ToolsComponent implements OnInit {
   //     TotalPressureDrop : 'TotPress'
   //   }
   // ];
+
+  public savedResultsFactair = [
+    { Model: 'Model',
+      Velocity: 'Vel',
+      Position: 'Pos',
+      Distance: 'Dist',
+      MaxVelocity: 'MaxV',
+      PressureDrop: 'Press',
+      Octave1: '63',
+      Octave2: '125',
+      Octave3: '250',
+      Octave4: '500',
+      Octave5: '1K',
+      Octave6: '2K',
+      Octave7: '4K',
+      Octave8: '8K',
+    }
+  ];
 
   public savedResultsOrificeTube = [
     { TestPressure: 'Press',
@@ -465,6 +510,16 @@ export class ToolsComponent implements OnInit {
     error : ''
   };
 
+  public factair : IFactair = {
+    model : this.factairs[0].value,
+    velocity : 0,
+    position : this.openclose[0].value,
+    distance : 2,
+    maxVelocity : 0,
+    pressureDrop : 0,
+    octaves : ''
+  };
+
   constructor( private toolsService: ToolsService) {
     //this.active = true;
    }
@@ -648,6 +703,42 @@ export class ToolsComponent implements OnInit {
             console.log("error");
           }
       })    
+  }
+
+  public onCalcFactair() {
+    this.toolsService.calcFactair(this.factair)
+      .subscribe((data:IFactair) => {
+          if ( data ){
+            // console.log(data);
+            // console.log(this.ductConvert);
+            // const duct = JSON.stringify(data);
+            this.factair = data;
+            // console.log(this.ductConvert);
+          } else {
+            console.log("error");
+          }
+      })
+  }
+
+  public onSaveResultsFactair(){
+    var saveResult = {
+      Model: String(this.factair.model),
+      Velocity: String(this.factair.velocity),
+      Position: String(this.factair.position),
+      Distance: String(this.factair.distance),
+      MaxVelocity: String(this.factair.maxVelocity),
+      PressureDrop: String(this.factair.pressureDrop),
+      Octave1: String(this.factair.octaves[0]),
+      Octave2: String(this.factair.octaves[1]),
+      Octave3: String(this.factair.octaves[2]),
+      Octave4: String(this.factair.octaves[3]),
+      Octave5: String(this.factair.octaves[4]),
+      Octave6: String(this.factair.octaves[5]),
+      Octave7: String(this.factair.octaves[6]),
+      Octave8: String(this.factair.octaves[7])
+    }
+    
+    this.savedResultsFactair.push(saveResult);    
   }
 
   public onSaveResultsOrificeTube(i) {
@@ -975,6 +1066,10 @@ export class ToolsComponent implements OnInit {
 
   public onRemoveOrificeTube(i){
     this.savedResultsOrificeTube.splice(i,1);
+  }
+
+  public onRemoveFactair(i){
+    this.savedResultsFactair.splice(i,1);
   }
 
 }

@@ -11,6 +11,7 @@ import { IThermalData } from '../models/thermal-data';
 import { IReinforcement } from '../models/reinforcement';
 import { IOrificeTube } from '../models/orifice-tube';
 import { IDuctDFuser } from '../models/duct-d-fuser';
+import { IFactair } from '../models/factair';
 
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/map';
@@ -269,6 +270,27 @@ export class ToolsService{
         })      
         .catch(this._handleError);        
     }
+
+    public calcFactair(factair : IFactair) : Observable<IFactair>{
+       
+        let bodyString = JSON.stringify(factair); // Stringify payload
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let url = this.config.apiUrl+"/factair";
+
+        return this.http.post(url, bodyString, {headers:headers})
+        .map((res:Response) => {
+            let data = res.json();
+            //console.log('test: '+data);
+            // Fix enums
+            //let duct = DuctType[data.type];
+            //data.type = duct;
+
+            return data;
+        })      
+        .catch(this._handleError);
+       
+        //alert(url + ":" + bodyString);
+    }        
 
     public calcStack(calcSupport : IStackDesign) : Observable<IStackDesign>{
        
