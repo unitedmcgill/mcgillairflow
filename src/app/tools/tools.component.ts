@@ -9,6 +9,7 @@ import { IUnderground } from '../models/underground';
 import { IThermalData } from '../models/thermal-data';
 import { IReinforcement } from '../models/reinforcement';
 import { IOrificeTube } from '../models/orifice-tube';
+import { IDuctDFuser } from '../models/duct-d-fuser';
 
 @Component({
   //selector: 'app-tools',
@@ -20,6 +21,24 @@ export class ToolsComponent implements OnInit {
   public yesno = [
     { value: '1', display: 'Yes'},
     { value: '0', display: 'No'}
+  ];
+
+  public yesnoInt = [
+    { value: 1, display: 'Yes'},
+    { value: 0, display: 'No'}
+  ];
+
+  public ddCalcTypes = [
+    { value: 'Pick', display: 'Pick Diameter'},
+    { value: 'Calc', display: 'Diameter based on Performance'}
+  ];
+
+  public velocityRanges = [
+    { value: 650, display: '500 to 800 fpm (Best Performance)'},
+    { value: 950, display: '800 to 1100 fpm (Better Performance)'},
+    { value: 1250, display: '1100 to 1400 fpm (Good Performance)'},
+    { value: 1600, display: '1400 to 1800 fpm (Fair Performance)'},
+    { value: 1800, display: '1800 fpm (Fair Performance)'}
   ];
 
   public burstCollapse = [
@@ -154,6 +173,19 @@ export class ToolsComponent implements OnInit {
     { value: 70, display: '70'},
     { value: 90, display: '90'}
   ];
+
+  // public savedResultsDDF = [
+  //   { 
+  //     DDCalcType : 'Calc',
+  //     VelocityRange : 'Vel',
+  //     Diameter : 'Dia.',
+  //     ConstDiameter : 'Const',
+  //     CFM : 'CFM',
+  //     Length : 'Len',
+  //     EnteringVelocity : 'EntVel',
+  //     TotalPressureDrop : 'TotPress'
+  //   }
+  // ];
 
   public savedResultsOrificeTube = [
     { TestPressure: 'Press',
@@ -419,6 +451,20 @@ export class ToolsComponent implements OnInit {
     tubeList : ''
   };
 
+  public ddf : IDuctDFuser = {
+    calcType : this.ddCalcTypes[0].value,
+    velocityRange : this.velocityRanges[0].value,
+    diameter : 0,
+    constDiameter : this.yesnoInt[0].value,
+    cfm : 0,
+    length : 0,
+    ductList : '',
+    orificeList : '',
+    enteringVelocity : 0,
+    totalPressureDrop : 0,
+    error : ''
+  };
+
   constructor( private toolsService: ToolsService) {
     //this.active = true;
    }
@@ -589,6 +635,20 @@ export class ToolsComponent implements OnInit {
       })
   }
 
+  public onCalcDDF() {
+    this.toolsService.calcDDF(this.ddf)
+      .subscribe((data:IDuctDFuser) => {
+          if ( data ){
+            // console.log(data);
+            // console.log(this.ductConvert);
+            // const duct = JSON.stringify(data);
+            this.ddf = data;
+            // console.log(this.ductConvert);
+          } else {
+            console.log("error");
+          }
+      })    
+  }
 
   public onSaveResultsOrificeTube(i) {
     var saveResult = {

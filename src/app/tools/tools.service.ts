@@ -10,6 +10,7 @@ import { IUnderground } from '../models/underground'
 import { IThermalData } from '../models/thermal-data';
 import { IReinforcement } from '../models/reinforcement';
 import { IOrificeTube } from '../models/orifice-tube';
+import { IDuctDFuser } from '../models/duct-d-fuser';
 
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/map';
@@ -249,6 +250,25 @@ export class ToolsService{
        
         //alert(url + ":" + bodyString);
     }    
+
+    public calcDDF( ddf : IDuctDFuser ) : Observable<IDuctDFuser>{
+
+        let bodyString = JSON.stringify(ddf); // Stringify payload
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let url = this.config.apiUrl+"/ddf";
+
+        return this.http.post(url, bodyString, {headers:headers})
+        .map((res:Response) => {
+            let data = res.json();
+            //console.log('test: '+data);
+            // Fix enums
+            //let duct = DuctType[data.type];
+            //data.type = duct;
+
+            return data;
+        })      
+        .catch(this._handleError);        
+    }
 
     public calcStack(calcSupport : IStackDesign) : Observable<IStackDesign>{
        

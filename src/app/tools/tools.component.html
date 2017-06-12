@@ -1405,6 +1405,115 @@
       </div>
     </tab>
 
+    <!--DDF-->
+    <tab heading="Duct-D-Fuser">
+      <div class="card card-block card-outline-primary ">
+        <h4 class="card-title">Duct-D-Fuser Designer Tool</h4>
+        <hr class="hr-blue">
+        <span>This web tool calculates the sections of Duct-D-Fuser needed for an application.</span>
+        <hr class="hr-blue" ><br />
+        <form (ngSubmit)="onCalcDDF()" #ddff="ngForm">
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Calculation Type</label>
+            <div class="col-xs-8">
+              <div class="col-xs-8" *ngFor="let ctype of ddCalcTypes">
+                <input type="radio" id="ctype-input" [(ngModel)]="ddf.calcType" name="ctype" [value]="ctype.value">{{ctype.display}}
+              </div>
+            </div>
+          </div>
+          <div *ngIf="ddf.calcType=='Pick'" class="form-group row">
+            <label class="col-xs-4 col-form-label">Starting SP Diameter (inches)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="ddf.diameter" name="diameter" #ddfDiameter="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="ddfDiameter.errors && (ddfDiameter.dirty || ddfDiameter.touched )">
+                <p *ngIf="ddfDiameter.errors.required">
+                    The diameter is required
+                </p>
+                <p *ngIf="ddfDiameter.errors.greaterThanZero">
+                    Diameter must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="ddf.calcType=='Calc'" class="form-group row">
+            <label class="col-xs-4 col-form-label">Velocity Range</label>
+            <div class="col-xs-8">
+              <div class="col-xs-8" *ngFor="let vel of velocityRanges">
+                <input type="radio" id="vel-input" [(ngModel)]="ddf.velocityRange" name="vel" [value]="vel.value">{{vel.display}}
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Constant Diameter</label>
+            <div class="col-xs-4">
+              <div class="col-xs-8" *ngFor="let answer of yesnoInt">
+                <input type="radio" id="const-input" [(ngModel)]="ddf.constDiameter" name="const" [value]="answer.value">{{answer.display}}
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Total Volume Flow Rate (cfm)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="tvfr-control" [(ngModel)]="ddf.cfm" name="tvfr" #tvfr="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="tvfr.errors && (tvfr.dirty || tvfr.touched )">
+                <p *ngIf="tvfr.errors.required">
+                    The CFM is required
+                </p>
+                <p *ngIf="tvfr.errors.greaterThanZero">
+                    CFM must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Total Length (ft)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="length-control" [(ngModel)]="ddf.length" name="length" #length="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="length.errors && (length.dirty || length.touched )">
+                <p *ngIf="length.errors.required">
+                    The length is required
+                </p>
+                <p *ngIf="length.errors.greaterThanZero">
+                    Length must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <button [disabled]="ddff.invalid" type="submit" class="btn-space btn btn-success">Calculate</button> 
+          </div>
+        </form>
+
+        <form #r9="ngForm">
+          <!-- Calculate DDF Design Results -->
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Results: &nbsp;&nbsp;
+            </label>
+          </div>         
+          <div class="row col-xs-12">
+            <div class = "col-xs-4">Section Number</div>
+            <div class = "col-xs-4">Duct Diameter</div>
+            <div class = "col-xs-4">Orifice or Reducer Diameter</div>
+          </div>
+          <div class="row">
+                <div class = "col-xs-12" *ngFor="let dd of ddf.ductList; let i = index">
+                  <div class = "col-xs-4">{{i+1}}</div>
+                  <div class = "col-xs-4">{{ddf.ductList[i]}}</div>
+                  <div class = "col-xs-4">{{ddf.orificeList[i]}}</div>
+                </div>
+          </div>
+          <div class="col-xs-12 form-group row">
+            <label class="col-xs-4 col-form-label">Entering Velocity: &nbsp; {{ddf.enteringVelocity}} &nbsp; fpm 
+            </label>
+            <label class="col-xs-4 col-form-label">Total Pressure Drop: &nbsp; {{ddf.totalPressureDrop}} &nbsp; in wg
+            </label>
+          </div>
+        </form>
+      </div>
+    </tab>
 
     <tab heading="McGill AirPressure">
       <div class="card card-block card-outline-primary ">
