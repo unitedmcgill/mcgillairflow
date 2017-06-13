@@ -11,6 +11,7 @@ import { IReinforcement } from '../models/reinforcement';
 import { IOrificeTube } from '../models/orifice-tube';
 import { IDuctDFuser } from '../models/duct-d-fuser';
 import { IFactair } from '../models/factair';
+import { IOffset } from '../models/offset';
 
 @Component({
   //selector: 'app-tools',
@@ -19,6 +20,25 @@ import { IFactair } from '../models/factair';
 })
 export class ToolsComponent implements OnInit {
 
+  public centerLines = [
+    { value: 0.75, display: '0.75'},
+    { value: 1.0, display: '1.0'},
+    { value: 1.5, display: '1.5'},
+    { value: 2.0, display: '2.0'},
+    { value: 2.5, display: '2.5'}
+  ];
+
+  public offsetCalcTypes = [
+    { value: 'Duct', display: 'Calculate Duct Between Elbows Offset'},
+    { value: 'Elbows', display: 'Calculate Offset Created by 2 Elbows'}
+  ];
+  
+  public offsetConnectionTypes = [
+    { value: 'slip', display: 'with Slip Fit Connection'},
+    { value: 'rings', display: 'with Welded Angle Rings'},
+    { value: 'vanstone', display: 'with Van Stoned Elbows'}
+  ];
+  
   public factairHz : string[] = ['63 Hz','125 Hz','250 Hz',
                                  '500 Hz', '1000 Hz', '2000 Hz',
                                  '4000 Hz', '8000 Hz'];
@@ -213,6 +233,20 @@ export class ToolsComponent implements OnInit {
   //     TotalPressureDrop : 'TotPress'
   //   }
   // ];
+
+  public savedResultsOffset = [
+    { CalcType: 'Type',
+      ConnectionType: 'Conn',
+      Diameter: 'Dia.',
+      Distance: 'Dist',
+      Length: 'Len',
+      CenterLine1: 'Cntr1',
+      CenterLine2: 'Cntr2',
+      Angle: 'Ang',
+      CalcLengthDesc: 'Desc',
+      CalcLength: 'Value'
+    }
+  ];
 
   public savedResultsFactair = [
     { Model: 'Model',
@@ -520,6 +554,19 @@ export class ToolsComponent implements OnInit {
     octaves : ''
   };
 
+  public offset : IOffset = {
+    calcType : this.offsetCalcTypes[0].value,
+    connectionType : this.offsetConnectionTypes[0].value,
+    diameter : 0,
+    distance : 0,
+    length : 0,
+    centerLine1 : 1.5,
+    centerLine2 : 1.5,
+    angle : 90,
+    calcLengthDesc : '',
+    calcLength : ''
+  };
+
   constructor( private toolsService: ToolsService) {
     //this.active = true;
    }
@@ -718,6 +765,38 @@ export class ToolsComponent implements OnInit {
             console.log("error");
           }
       })
+  }
+
+  public onCalcOffset() {
+    this.toolsService.calcOffset(this.offset)
+      .subscribe((data:IOffset) => {
+          if ( data ){
+            // console.log(data);
+            // console.log(this.ductConvert);
+            // const duct = JSON.stringify(data);
+            this.offset = data;
+            // console.log(this.ductConvert);
+          } else {
+            console.log("error");
+          }
+      })
+  }
+
+  public onSaveResultsOffset(){
+    var saveResult = {
+      CalcType: String(this.offset.calcType),
+      ConnectionType: String(this.offset.connectionType),
+      Diameter: String(this.offset.diameter),
+      Distance: String(this.offset.distance),
+      Length: String(this.offset.length),
+      CenterLine1: String(this.offset.centerLine1),
+      CenterLine2: String(this.offset.centerLine2),
+      Angle: String(this.offset.angle),
+      CalcLengthDesc: String(this.offset.calcLengthDesc),
+      CalcLength: String(this.offset.calcLength)
+    }
+    
+    this.savedResultsOffset.push(saveResult);    
   }
 
   public onSaveResultsFactair(){
@@ -1070,6 +1149,10 @@ export class ToolsComponent implements OnInit {
 
   public onRemoveFactair(i){
     this.savedResultsFactair.splice(i,1);
+  }
+
+  public onRemoveOffset(i){
+    this.savedResultsOffset.splice(i,1);
   }
 
 }
