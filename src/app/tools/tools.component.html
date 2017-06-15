@@ -1770,6 +1770,844 @@
       </div>
     </tab>
 
+    <!--Acoustical-->
+    <tab heading="Acoustical">
+      <div class="card card-block card-outline-primary ">
+        <h4 class="card-title">Acoustical Designer Tool</h4>
+        <hr class="hr-blue">
+        <span>This web tool calculates the acoustical information for the applicaion.</span>
+        <hr class="hr-blue" ><br />
+
+        <form (ngSubmit)="onCalcAcoustical()" #sound="ngForm">
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Calculation Type</label>
+            <div class="col-xs-8">
+              <div class="col-xs-8" *ngFor="let acCalcType of acousticalCalcTypes">
+                <input (click)="onCalcTypeSelect()" type="radio" id="acCalcType-input" [(ngModel)]="acoustical.calcType" name="acCalcType" [value]="acCalcType.value">{{acCalcType.display}}
+              </div>
+            </div>
+            <div *ngIf="acoustical.calcType=='Addition'" class="form-group row">
+              <label class="col-xs-4 col-form-label">Number of Sound Sources</label>
+              <div class="col-xs-8">
+                <div class="col-xs-8" *ngFor="let ssouce of numbers125">
+                  <input type="radio" id="levels-input" [(ngModel)]="acoustical.levels" name="levels" [value]="ssouce.value">{{ssouce.display}}
+                </div>
+              </div>
+            </div>            
+          </div>
+          <div *ngIf="acoustical.calcType=='Discharge'" class="form-group row">
+            <label class="col-xs-4 col-form-label">Duct Length Before Silencer (ft)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="acoustical.lengthBefore" name="lengthBefore" #lengthBefore="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="lengthBefore.errors && (lengthBefore.dirty || lengthBefore.touched )">
+                <p *ngIf="lengthBefore.errors.required">
+                    The length before is required
+                </p>
+                <p *ngIf="lengthBefore.errors.greaterThanZero">
+                    Length before must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="acoustical.calcType=='Discharge'" class="form-group row">
+            <label class="col-xs-4 col-form-label">Duct Length After Silencer (ft)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="acoustical.lengthAfter" name="lengthAfter" #lengthAfter="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="lengthAfter.errors && (lengthAfter.dirty || lengthAfter.touched )">
+                <p *ngIf="lengthAfter.errors.required">
+                    The length after is required
+                </p>
+                <p *ngIf="lengthAfter.errors.greaterThanZero">
+                    Length after must be > 0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="acoustical.calcType=='Discharge'" class="form-group row">
+            <label class="col-xs-4 col-form-label">Distance from Discharge (ft)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="acoustical.distance" name="distance" #distance="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="distance.errors && (distance.dirty || distance.touched )">
+                <p *ngIf="distance.errors.required">
+                    The distance from discharge is required
+                </p>
+                <p *ngIf="distance.errors.greaterThanZero">
+                    Distance must be > 0
+                </p>
+              </div>
+            </div>
+          </div>          
+          <div class="form-group row">
+            <div class="col-xs-12">
+              <span>Enter coresponding Low Levels in the boxes provided:</span>
+            </div>
+          </div>
+          <div class="col-xs-12 form-group row">
+              <div class="col-xs-2">
+                63 Hz (db):
+              </div>
+              <div class="col-xs-2">
+                <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[0][0]" name="inputLevels00" #inputLevels00="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                <div class="alert alert-danger" *ngIf="inputLevels00.errors && (inputLevels00.dirty || inputLevels00.touched )">
+                  <p *ngIf="inputLevels00.errors.required">
+                      Required
+                  </p>
+                  <p *ngIf="inputLevels00.errors.greaterThanZero">
+                      Must be > 0
+                  </p>
+                </div>                
+              </div>
+          </div>
+          <div class="col-xs-12 form-group row">
+              <div class="col-xs-2">
+                125 Hz (db):
+              </div>
+              <div class="col-xs-2">
+                <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[0][1]" name="inputLevels01" #inputLevels01="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                <div class="alert alert-danger" *ngIf="inputLevels01.errors && (inputLevels01.dirty || inputLevels01.touched )">
+                  <p *ngIf="inputLevels01.errors.required">
+                      Required
+                  </p>
+                  <p *ngIf="inputLevels01.errors.greaterThanZero">
+                      Must be > 0
+                  </p>
+                </div>                
+              </div>
+          </div>
+          <div class="col-xs-12 form-group row">
+              <div class="col-xs-2">
+                250 Hz (db):
+              </div>
+              <div class="col-xs-2">
+                <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[0][2]" name="inputLevels02" #inputLevels02="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                <div class="alert alert-danger" *ngIf="inputLevels02.errors && (inputLevels02.dirty || inputLevels02.touched )">
+                  <p *ngIf="inputLevels02.errors.required">
+                      Required
+                  </p>
+                  <p *ngIf="inputLevels02.errors.greaterThanZero">
+                      Must be > 0
+                  </p>
+                </div>                
+              </div>
+          </div>
+          <div class="col-xs-12 form-group row">
+              <div class="col-xs-2">
+                500 Hz (db):
+              </div>
+              <div class="col-xs-2">
+                <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[0][3]" name="inputLevels03" #inputLevels03="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                <div class="alert alert-danger" *ngIf="inputLevels03.errors && (inputLevels03.dirty || inputLevels03.touched )">
+                  <p *ngIf="inputLevels03.errors.required">
+                      Required
+                  </p>
+                  <p *ngIf="inputLevels03.errors.greaterThanZero">
+                      Must be > 0
+                  </p>
+                </div>                
+              </div>
+          </div>
+          <div class="col-xs-12 form-group row">
+              <div class="col-xs-2">
+                1K Hz (db):
+              </div>
+              <div class="col-xs-2">
+                <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[0][4]" name="inputLevels04" #inputLevels04="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                <div class="alert alert-danger" *ngIf="inputLevels04.errors && (inputLevels04.dirty || inputLevels04.touched )">
+                  <p *ngIf="inputLevels04.errors.required">
+                      Required
+                  </p>
+                  <p *ngIf="inputLevels04.errors.greaterThanZero">
+                      Must be > 0
+                  </p>
+                </div>                
+              </div>
+          </div>
+          <div class="col-xs-12 form-group row">
+              <div class="col-xs-2">
+                2K Hz (db):
+              </div>
+              <div class="col-xs-2">
+                <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[0][5]" name="inputLevels05" #inputLevels05="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                <div class="alert alert-danger" *ngIf="inputLevels05.errors && (inputLevels05.dirty || inputLevels05.touched )">
+                  <p *ngIf="inputLevels05.errors.required">
+                      Required
+                  </p>
+                  <p *ngIf="inputLevels05.errors.greaterThanZero">
+                      Must be > 0
+                  </p>
+                </div>                
+              </div>
+          </div>
+          <div class="col-xs-12 form-group row">
+              <div class="col-xs-2">
+                4K Hz (db):
+              </div>
+              <div class="col-xs-2">
+                <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[0][6]" name="inputLevels06" #inputLevels06="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                <div class="alert alert-danger" *ngIf="inputLevels06.errors && (inputLevels06.dirty || inputLevels06.touched )">
+                  <p *ngIf="inputLevels06.errors.required">
+                      Required
+                  </p>
+                  <p *ngIf="inputLevels06.errors.greaterThanZero">
+                      Must be > 0
+                  </p>
+                </div>                
+              </div>
+          </div>
+          <div class="col-xs-12 form-group row">
+              <div class="col-xs-2">
+                8K Hz (db):
+              </div>
+              <div class="col-xs-2">
+                <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[0][7]" name="inputLevels07" #inputLevels07="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                <div class="alert alert-danger" *ngIf="inputLevels07.errors && (inputLevels07.dirty || inputLevels07.touched )">
+                  <p *ngIf="inputLevels07.errors.required">
+                      Required
+                  </p>
+                  <p *ngIf="inputLevels07.errors.greaterThanZero">
+                      Must be > 0
+                  </p>
+                </div>                
+              </div>
+          </div>
+          <div *ngIf="acoustical.calcType=='Discharge' || acoustical.levels > 1">
+
+            <div class="form-group row">
+              <div *ngIf="acoustical.calcType=='Discharge'" class="col-xs-12">
+                <span>Enter coresponding Duct Attenuation BEFORE silencer in the boxes provided:</span>
+              </div>
+              <div *ngIf="acoustical.levels > 1" class="col-xs-12">
+                <span>2nd Set:</span>
+              </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  63 Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[1][0]" name="inputLevels10" #inputLevels10="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels10.errors && (inputLevels10.dirty || inputLevels10.touched )">
+                    <p *ngIf="inputLevels10.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels10.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  125 Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[1][1]" name="inputLevels11" #inputLevels11="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels11.errors && (inputLevels11.dirty || inputLevels11.touched )">
+                    <p *ngIf="inputLevels11.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels11.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  250 Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[1][2]" name="inputLevels12" #inputLevels12="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels12.errors && (inputLevels12.dirty || inputLevels12.touched )">
+                    <p *ngIf="inputLevels12.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels12.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  500 Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[1][3]" name="inputLevels13" #inputLevels13="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels13.errors && (inputLevels13.dirty || inputLevels13.touched )">
+                    <p *ngIf="inputLevels13.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels13.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  1K Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[1][4]" name="inputLevels14" #inputLevels14="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels14.errors && (inputLevels14.dirty || inputLevels14.touched )">
+                    <p *ngIf="inputLevels14.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels14.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  2K Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[1][5]" name="inputLevels15" #inputLevels15="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels15.errors && (inputLevels15.dirty || inputLevels15.touched )">
+                    <p *ngIf="inputLevels15.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels15.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  4K Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[1][6]" name="inputLevels16" #inputLevels16="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels16.errors && (inputLevels16.dirty || inputLevels16.touched )">
+                    <p *ngIf="inputLevels16.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels16.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  8K Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[1][7]" name="inputLevels17" #inputLevels17="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels17.errors && (inputLevels17.dirty || inputLevels17.touched )">
+                    <p *ngIf="inputLevels17.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels17.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+          </div>
+
+          <div *ngIf="acoustical.calcType=='Discharge' || acoustical.levels > 2">
+
+            <div class="form-group row">
+              <div *ngIf="acoustical.calcType=='Discharge'" class="col-xs-12">
+                <span>Enter coresponding Silencer Attenuation in the boxes provided:</span>
+              </div>
+              <div *ngIf="acoustical.levels > 1" class="col-xs-12">
+                <span>3rd Set:</span>
+              </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  63 Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[2][0]" name="inputLevels20" #inputLevels20="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels20.errors && (inputLevels20.dirty || inputLevels20.touched )">
+                    <p *ngIf="inputLevels20.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels20.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  125 Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[2][1]" name="inputLevels21" #inputLevels21="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels21.errors && (inputLevels21.dirty || inputLevels21.touched )">
+                    <p *ngIf="inputLevels21.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels21.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  250 Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[2][2]" name="inputLevels22" #inputLevels22="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels22.errors && (inputLevels22.dirty || inputLevels22.touched )">
+                    <p *ngIf="inputLevels22.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels22.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  500 Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[2][3]" name="inputLevels23" #inputLevels23="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels23.errors && (inputLevels23.dirty || inputLevels23.touched )">
+                    <p *ngIf="inputLevels23.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels23.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  1K Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[2][4]" name="inputLevels24" #inputLevels24="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels24.errors && (inputLevels24.dirty || inputLevels24.touched )">
+                    <p *ngIf="inputLevels24.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels24.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  2K Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[2][5]" name="inputLevels25" #inputLevels25="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels25.errors && (inputLevels25.dirty || inputLevels25.touched )">
+                    <p *ngIf="inputLevels25.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels25.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  4K Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[2][6]" name="inputLevels26" #inputLevels26="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels26.errors && (inputLevels26.dirty || inputLevels26.touched )">
+                    <p *ngIf="inputLevels26.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels26.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  8K Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[2][7]" name="inputLevels27" #inputLevels27="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels27.errors && (inputLevels27.dirty || inputLevels27.touched )">
+                    <p *ngIf="inputLevels27.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels27.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+          </div>
+
+          <div *ngIf="acoustical.calcType=='Discharge' || acoustical.levels > 3">
+
+            <div class="form-group row">
+              <div *ngIf="acoustical.calcType=='Discharge'" class="col-xs-12">
+                <span>Enter coresponding Silencer GNL in the boxes provided:</span>
+              </div>
+              <div *ngIf="acoustical.levels > 3" class="col-xs-12">
+                <span>4th Set:</span>
+              </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  63 Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[3][0]" name="inputLevels30" #inputLevels30="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels30.errors && (inputLevels30.dirty || inputLevels30.touched )">
+                    <p *ngIf="inputLevels30.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels30.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  125 Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[3][1]" name="inputLevels31" #inputLevels31="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels31.errors && (inputLevels31.dirty || inputLevels31.touched )">
+                    <p *ngIf="inputLevels31.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels31.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  250 Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[3][2]" name="inputLevels32" #inputLevels32="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels32.errors && (inputLevels32.dirty || inputLevels32.touched )">
+                    <p *ngIf="inputLevels32.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels32.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  500 Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[3][3]" name="inputLevels33" #inputLevels33="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels33.errors && (inputLevels33.dirty || inputLevels33.touched )">
+                    <p *ngIf="inputLevels33.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels33.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  1K Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[3][4]" name="inputLevels34" #inputLevels34="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels34.errors && (inputLevels34.dirty || inputLevels34.touched )">
+                    <p *ngIf="inputLevels34.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels34.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  2K Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[3][5]" name="inputLevels35" #inputLevels35="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels35.errors && (inputLevels35.dirty || inputLevels35.touched )">
+                    <p *ngIf="inputLevels35.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels35.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  4K Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[3][6]" name="inputLevels36" #inputLevels36="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels36.errors && (inputLevels36.dirty || inputLevels36.touched )">
+                    <p *ngIf="inputLevels36.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels36.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  8K Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[3][7]" name="inputLevels37" #inputLevels37="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels37.errors && (inputLevels37.dirty || inputLevels37.touched )">
+                    <p *ngIf="inputLevels37.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels37.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+        </div>
+
+
+          <div *ngIf="acoustical.calcType=='Discharge' || acoustical.levels > 4">
+
+            <div class="form-group row">
+              <div *ngIf="acoustical.calcType=='Discharge'" class="col-xs-12">
+                <span>Enter coresponding Duct Attenuation AFTER silencer in the boxes provided:</span>
+              </div>
+              <div *ngIf="acoustical.levels > 4" class="col-xs-12">
+                <span>5th Set:</span>
+              </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  63 Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[4][0]" name="inputLevels40" #inputLevels40="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels40.errors && (inputLevels40.dirty || inputLevels40.touched )">
+                    <p *ngIf="inputLevels40.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels40.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  125 Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[4][1]" name="inputLevels41" #inputLevels41="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels41.errors && (inputLevels41.dirty || inputLevels41.touched )">
+                    <p *ngIf="inputLevels41.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels41.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  250 Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[4][2]" name="inputLevels42" #inputLevels42="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels42.errors && (inputLevels42.dirty || inputLevels42.touched )">
+                    <p *ngIf="inputLevels42.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels42.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  500 Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[4][3]" name="inputLevels43" #inputLevels43="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels43.errors && (inputLevels43.dirty || inputLevels43.touched )">
+                    <p *ngIf="inputLevels43.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels43.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  1K Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[4][4]" name="inputLevels44" #inputLevels44="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels44.errors && (inputLevels44.dirty || inputLevels44.touched )">
+                    <p *ngIf="inputLevels44.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels44.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  2K Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[4][5]" name="inputLevels45" #inputLevels45="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels45.errors && (inputLevels45.dirty || inputLevels45.touched )">
+                    <p *ngIf="inputLevels45.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels45.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  4K Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[4][6]" name="inputLevels46" #inputLevels46="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels46.errors && (inputLevels46.dirty || inputLevels46.touched )">
+                    <p *ngIf="inputLevels46.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels46.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+            <div class="col-xs-12 form-group row">
+                <div class="col-xs-2">
+                  8K Hz (db):
+                </div>
+                <div class="col-xs-2">
+                  <input type="number" class="form-control" [(ngModel)]="acoustical.inputLevels[4][7]" name="inputLevels47" #inputLevels47="ngModel" required greaterThanZero (click)="$event.target.select()"/>
+                  <div class="alert alert-danger" *ngIf="inputLevels47.errors && (inputLevels47.dirty || inputLevels47.touched )">
+                    <p *ngIf="inputLevels47.errors.required">
+                        Required
+                    </p>
+                    <p *ngIf="inputLevels47.errors.greaterThanZero">
+                        Must be > 0
+                    </p>
+                  </div>                
+                </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <button [disabled]="sound.invalid" type="submit" class="btn-space btn btn-success">Calculate</button> 
+          </div>
+
+        </form>
+
+        <form #r12="ngForm">
+          <div class="form-group row col-xs-12">
+            <label class="col-xs-2 col-form-label">Results: &nbsp;&nbsp;
+            </label>
+            <label class="col-xs-2 col-form-label">{{acoustical.outputDesc}}
+            </label>
+            <label *ngIf="acoustical.calcType=='Addition'" class="col-xs-2 col-form-label">A-Weighted
+            </label>
+          </div>
+          <div class="col-xs-12 form-group row">
+            <div class="col-xs-2">63 Hz (db):</div>
+            <label class="col-xs-2">{{acoustical.outputLevels[0][0]}}</label>
+            <label *ngIf="acoustical.calcType=='Addition'" class="col-xs-2">{{acoustical.outputLevels[1][0]}}
+            </label>
+          </div>
+          <div class="col-xs-12 form-group row">
+            <div class="col-xs-2">125 Hz (db):</div>
+            <label class="col-xs-2">{{acoustical.outputLevels[0][1]}}</label>
+            <label *ngIf="acoustical.calcType=='Addition'" class="col-xs-2">{{acoustical.outputLevels[1][1]}}
+            </label>
+          </div>          
+          <div class="col-xs-12 form-group row">
+            <div class="col-xs-2">250 Hz (db):</div>
+            <label class="col-xs-2">{{acoustical.outputLevels[0][2]}}</label>
+            <label *ngIf="acoustical.calcType=='Addition'" class="col-xs-2">{{acoustical.outputLevels[1][2]}}
+            </label>
+          </div>          
+          <div class="col-xs-12 form-group row">
+            <div class="col-xs-2">500 Hz (db):</div>
+            <label class="col-xs-2">{{acoustical.outputLevels[0][3]}}</label>
+            <label *ngIf="acoustical.calcType=='Addition'" class="col-xs-2">{{acoustical.outputLevels[1][3]}}
+            </label>
+          </div>          
+          <div class="col-xs-12 form-group row">
+            <div class="col-xs-2">1K Hz (db):</div>
+            <label class="col-xs-2">{{acoustical.outputLevels[0][4]}}</label>
+            <label *ngIf="acoustical.calcType=='Addition'" class="col-xs-2">{{acoustical.outputLevels[1][4]}}
+            </label>
+          </div>          
+          <div class="col-xs-12 form-group row">
+            <div class="col-xs-2">2K Hz (db):</div>
+            <label class="col-xs-2">{{acoustical.outputLevels[0][5]}}</label>
+            <label *ngIf="acoustical.calcType=='Addition'" class="col-xs-2">{{acoustical.outputLevels[1][5]}}
+            </label>
+          </div>          
+          <div class="col-xs-12 form-group row">
+            <div class="col-xs-2">4K Hz (db):</div>
+            <label class="col-xs-2">{{acoustical.outputLevels[0][6]}}</label>
+            <label *ngIf="acoustical.calcType=='Addition'" class="col-xs-2">{{acoustical.outputLevels[1][6]}}
+            </label>
+          </div>          
+          <div class="col-xs-12 form-group row">
+            <div class="col-xs-2">8K Hz (db):</div>
+            <label class="col-xs-2">{{acoustical.outputLevels[0][7]}}</label>
+            <label *ngIf="acoustical.calcType=='Addition'" class="col-xs-2">{{acoustical.outputLevels[1][7]}}
+            </label>
+          </div>          
+          <div class="col-xs-12 form-group row">
+            <div class="col-xs-2">Overall dBA:</div>
+            <label *ngIf="acoustical.calcType != 'Addition'" class="col-xs-2">{{acoustical.overall}}</label>
+            <label *ngIf="acoustical.calcType == 'Addition'" class="col-xs-2">&nbsp;</label>
+            <label *ngIf="acoustical.calcType == 'Addition'" class="col-xs-2">{{acoustical.overall}}</label>
+          </div>              
+        </form>
+
+      </div>
+    </tab>
+
     <tab heading="McGill AirPressure">
       <div class="card card-block card-outline-primary ">
         <h4 class="card-title card-accent-primary">Locations</h4>

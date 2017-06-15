@@ -12,6 +12,7 @@ import { IOrificeTube } from '../models/orifice-tube';
 import { IDuctDFuser } from '../models/duct-d-fuser';
 import { IFactair } from '../models/factair';
 import { IOffset } from '../models/offset';
+import { IAcoustical } from '../models/acoustical';
 
 @Component({
   //selector: 'app-tools',
@@ -19,6 +20,20 @@ import { IOffset } from '../models/offset';
   styleUrls: ['./tools.component.scss']
 })
 export class ToolsComponent implements OnInit {
+
+  public numbers125 = [
+    { value: 1, display: '1'},
+    { value: 2, display: '2'},
+    { value: 3, display: '3'},
+    { value: 4, display: '4'},
+    { value: 5, display: '5'}
+  ];
+
+  public acousticalCalcTypes = [
+    { value: 'AWeighting', display: 'A Weighting Calc'},
+    { value: 'Addition', display: 'Sound Power Addition'},
+    { value: 'Discharge', display: 'Fan/Silencer Free Field Discharge Sound Power Levels'}
+  ];
 
   public centerLines = [
     { value: 0.75, display: '0.75'},
@@ -40,8 +55,8 @@ export class ToolsComponent implements OnInit {
   ];
   
   public factairHz : string[] = ['63 Hz','125 Hz','250 Hz',
-                                 '500 Hz', '1000 Hz', '2000 Hz',
-                                 '4000 Hz', '8000 Hz'];
+                                 '500 Hz', '1K Hz', '2K Hz',
+                                 '4K Hz', '8K Hz'];
   
   public factairDistances = [
      {value: 1, display: '1'},
@@ -220,19 +235,6 @@ export class ToolsComponent implements OnInit {
     { value: 70, display: '70'},
     { value: 90, display: '90'}
   ];
-
-  // public savedResultsDDF = [
-  //   { 
-  //     DDCalcType : 'Calc',
-  //     VelocityRange : 'Vel',
-  //     Diameter : 'Dia.',
-  //     ConstDiameter : 'Const',
-  //     CFM : 'CFM',
-  //     Length : 'Len',
-  //     EnteringVelocity : 'EntVel',
-  //     TotalPressureDrop : 'TotPress'
-  //   }
-  // ];
 
   public savedResultsOffset = [
     { CalcType: 'Type',
@@ -567,6 +569,26 @@ export class ToolsComponent implements OnInit {
     calcLength : ''
   };
 
+  public acoustical : IAcoustical = {
+    calcType : this.acousticalCalcTypes[0].value,
+    levels : this.numbers125[0].value,
+    lengthBefore : 0,
+    lengthAfter : 0,
+    distance : 0,
+    inputLevels : [[0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0]],
+    outputDesc : '',
+    outputLevels : [[0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0]],
+    overall : 0
+  };
+
   constructor( private toolsService: ToolsService) {
     //this.active = true;
    }
@@ -775,6 +797,21 @@ export class ToolsComponent implements OnInit {
             // console.log(this.ductConvert);
             // const duct = JSON.stringify(data);
             this.offset = data;
+            // console.log(this.ductConvert);
+          } else {
+            console.log("error");
+          }
+      })
+  }
+
+  public onCalcAcoustical() {
+    this.toolsService.calcAcoustical(this.acoustical)
+      .subscribe((data:IAcoustical) => {
+          if ( data ){
+            // console.log(data);
+            // console.log(this.ductConvert);
+            // const duct = JSON.stringify(data);
+            this.acoustical = data;
             // console.log(this.ductConvert);
           } else {
             console.log("error");
@@ -1113,6 +1150,24 @@ export class ToolsComponent implements OnInit {
             console.log("error")
         }
       })
+  }
+
+  public onCalcTypeSelect(){
+    // Clear the input and the results
+    this.acoustical.inputLevels = 
+                    [[0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0]];
+        this.acoustical.outputLevels = 
+                    [[0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0]];
+    this.acoustical.overall = 0;
+    this.acoustical.levels = this.numbers125[0].value;
   }
 
   public onRemoveResult(i){
