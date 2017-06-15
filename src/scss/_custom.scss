@@ -1,4 +1,7 @@
 // Here you can add other styles
+* {
+    -webkit-font-smoothing: none;
+}
 
 tabset.locations > .nav-tabs {
     background-color: aliceblue;
@@ -19,4 +22,33 @@ tabset.locations > .nav-tabs {
 
 .hr-blue {
   border-color: #20a8d8;
+}
+
+table {
+    text-align: center;
+    color:white;
+    border-collapse:collapse;
+    border: 1px solid #000;
+    margin:4px;
+    font-family: 'Roboto', sans-serif;
+}
+
+thead {
+    background-color: #1171a3;
+}
+
+tbody {
+    background-color: ButtonShadow;
+}
+
+.mcgill-mediumblue {
+    background-color:#589CBF;
+}
+
+td {
+  border:1px solid black;
+}
+
+tfoot {
+  color:black;
 }
