@@ -52,3 +52,22 @@ td {
 tfoot {
   color:black;
 }
+
+figure figcaption {
+    display: table-caption; caption-side: bottom ;
+}
+
+figure.mcgill-picture{
+    display: table;
+    width: -webkit-min-content;
+    width: -moz-min-content;
+    width: min-content;
+    width: auto;
+    padding: 3px;
+    text-align: center;
+    margin: 8px;
+}
+
+div.mcgill-boarder{
+        border: 1px solid black;
+}
