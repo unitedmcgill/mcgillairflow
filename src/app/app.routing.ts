@@ -103,6 +103,22 @@ export const routes: Routes = [
                 loadChildren: './tools/tools.module#ToolsModule'
             },
             {
+                path: 'cas',
+                loadChildren: './cas/cas.module#CasModule'
+            },
+            {
+                path: 'solution',
+                loadChildren: './solution/solution.module#SolutionModule'
+            },
+            {
+                path: 'productlit',
+                loadChildren: './productlit/productlit.module#ProductLitModule'
+            },
+            {
+                path: 'dimperf',
+                loadChildren: './dimperf/dimperf.module#DimPerfModule'
+            },
+            {
                 path: 'career',
                 loadChildren: './career/career.module#CareerModule'
             },
