@@ -403,6 +403,7 @@ export class ToolsComponent implements OnInit {
   ];
 
   //public active : boolean;\
+  public showLoader : boolean = false;
   public burst : string;
   public errorMessage: string;
   public data : ToolsFormData;
@@ -611,6 +612,8 @@ export class ToolsComponent implements OnInit {
     let value = String(this.data.Value);
     let toCfm = String(this.data.Unit);
 
+    this.showLoader = true;
+
     this.toolsService.convertVolumeFlowRate(value,toCfm)
         .subscribe((result:string) => {
           // Success
@@ -622,7 +625,7 @@ export class ToolsComponent implements OnInit {
           console.log(err);
         },
         // Finally
-        () => console.log('convertValueFlowRate() called'));
+        () => this.showLoader = false);
   
     // Trick to reset the pristine state of the form
     // This is a temporary workaraound until a form reset procedure is available
@@ -632,6 +635,7 @@ export class ToolsComponent implements OnInit {
 
   public onConvertDuctTypes(){
     this.ductConvert.name = "foo";
+    this.showLoader = true;
 
     this.toolsService.convertDuctTypes(this.ductConvert)
       .subscribe((data: IDuctConvert) => {
@@ -644,12 +648,18 @@ export class ToolsComponent implements OnInit {
           } else {
             console.log("error");
           }
-      })
+        },
+        // On Error
+        (err:any) => {
+          console.log(err);
+        },
+        // Finally
+        () => this.showLoader = false);
   }
 
   public onCalcPressure(){
     // Check the type and call the correct toolsService
-
+    this.showLoader = true;
     if ( this.operatingPressure.type == 0 )
     {
       this.toolsService.calcPressure(this.operatingPressure)
@@ -659,7 +669,13 @@ export class ToolsComponent implements OnInit {
           } else {
             console.log("error")
           }
-        })
+        },
+        // On Error
+        (err:any) => {
+          console.log(err);
+        },
+        // Finally
+        () => this.showLoader = false);
     }else if ( this.operatingPressure.type == 1 ) 
     {
       this.toolsService.calcStiffenerSpacing(this.operatingPressure)
@@ -669,7 +685,13 @@ export class ToolsComponent implements OnInit {
           } else {
             console.log("error")
           }
-        })
+        },
+        // On Error
+        (err:any) => {
+          console.log(err);
+        },
+        // Finally
+        () => this.showLoader = false);
     }else if ( this.operatingPressure.type == 2 )
     {
       this.toolsService.calcMinThickness(this.operatingPressure)
@@ -679,12 +701,18 @@ export class ToolsComponent implements OnInit {
           } else {
               console.log("error")
           }
-        })
+        },
+        // On Error
+        (err:any) => {
+          console.log(err);
+        },
+        // Finally
+        () => this.showLoader = false);
     }
   }
 
   public onCalcStackDesign(){
-
+    this.showLoader = true;
     this.toolsService.calcStack(this.stackDesign)
       .subscribe((data:IStackDesign) => {
           if ( data ){
@@ -696,10 +724,17 @@ export class ToolsComponent implements OnInit {
           } else {
             console.log("error");
           }
-      })
+      },
+        // On Error
+        (err:any) => {
+          console.log(err);
+        },
+        // Finally
+        () => this.showLoader = false);
   }
 
   public onCalcUnderground() {
+    this.showLoader = true;
     this.toolsService.calcUnderground(this.underground)
       .subscribe((data:IUnderground) => {
           if ( data ){
@@ -711,10 +746,17 @@ export class ToolsComponent implements OnInit {
           } else {
             console.log("error");
           }
-      })
+      },
+        // On Error
+        (err:any) => {
+          console.log(err);
+        },
+        // Finally
+        () => this.showLoader = false);
   }
 
   public onCalcThermalData() {
+    this.showLoader = true;
     this.toolsService.calcThermalData(this.thermalData)
       .subscribe((data:IThermalData) => {
           if ( data ){
@@ -726,10 +768,17 @@ export class ToolsComponent implements OnInit {
           } else {
             console.log("error");
           }
-      })
+      },
+        // On Error
+        (err:any) => {
+          console.log(err);
+        },
+        // Finally
+        () => this.showLoader = false);
   }
 
   public onCalcReinforcement() {
+    this.showLoader = true;
     this.toolsService.calcReinforcement(this.reinforcement)
       .subscribe((data:IReinforcement) => {
           if ( data ){
@@ -741,10 +790,17 @@ export class ToolsComponent implements OnInit {
           } else {
             console.log("error");
           }
-      })
+      },
+        // On Error
+        (err:any) => {
+          console.log(err);
+        },
+        // Finally
+        () => this.showLoader = false);
   }
 
   public onCalcOrificeTube() {
+    this.showLoader = true;
     this.toolsService.calcOrificeTube(this.orificetube)
       .subscribe((data:IOrificeTube) => {
           if ( data ){
@@ -756,10 +812,17 @@ export class ToolsComponent implements OnInit {
           } else {
             console.log("error");
           }
-      })
+      },
+        // On Error
+        (err:any) => {
+          console.log(err);
+        },
+        // Finally
+        () => this.showLoader = false);
   }
 
   public onCalcDDF() {
+    this.showLoader = true;
     this.toolsService.calcDDF(this.ddf)
       .subscribe((data:IDuctDFuser) => {
           if ( data ){
@@ -771,10 +834,17 @@ export class ToolsComponent implements OnInit {
           } else {
             console.log("error");
           }
-      })    
+      },
+        // On Error
+        (err:any) => {
+          console.log(err);
+        },
+        // Finally
+        () => this.showLoader = false);    
   }
 
   public onCalcFactair() {
+    this.showLoader = true;
     this.toolsService.calcFactair(this.factair)
       .subscribe((data:IFactair) => {
           if ( data ){
@@ -786,10 +856,17 @@ export class ToolsComponent implements OnInit {
           } else {
             console.log("error");
           }
-      })
+      },
+        // On Error
+        (err:any) => {
+          console.log(err);
+        },
+        // Finally
+        () => this.showLoader = false);
   }
 
   public onCalcOffset() {
+    this.showLoader = true;
     this.toolsService.calcOffset(this.offset)
       .subscribe((data:IOffset) => {
           if ( data ){
@@ -801,10 +878,17 @@ export class ToolsComponent implements OnInit {
           } else {
             console.log("error");
           }
-      })
+      },
+        // On Error
+        (err:any) => {
+          console.log(err);
+        },
+        // Finally
+        () => this.showLoader = false);
   }
 
   public onCalcAcoustical() {
+    this.showLoader = true;
     this.toolsService.calcAcoustical(this.acoustical)
       .subscribe((data:IAcoustical) => {
           if ( data ){
@@ -816,7 +900,13 @@ export class ToolsComponent implements OnInit {
           } else {
             console.log("error");
           }
-      })
+      },
+        // On Error
+        (err:any) => {
+          console.log(err);
+        },
+        // Finally
+        () => this.showLoader = false);
   }
 
   public onSaveResultsOffset(){
@@ -1053,7 +1143,7 @@ export class ToolsComponent implements OnInit {
   }
 
   public onCalcSupportDesign(){
-
+    this.showLoader = true;
     this.toolsService.calcSupport(this.supportDesign)
       .subscribe((data: ISupportDesign) => {
           if ( data ){
@@ -1065,7 +1155,13 @@ export class ToolsComponent implements OnInit {
           } else {
             console.log("error");
           }
-      })
+      },
+        // On Error
+        (err:any) => {
+          console.log(err);
+        },
+        // Finally
+        () => this.showLoader = false);
   }
 
   public onSaveResultsSupportDesign() {
@@ -1142,6 +1238,7 @@ export class ToolsComponent implements OnInit {
   }
 
   public onBurstCollapse(){
+    this.showLoader = true;
     this.toolsService.calcBurstCollapse(this.burst, this.operatingPressure)
       .subscribe((data:ICalcOperatingPressure) => {
         if (data ) {
@@ -1149,7 +1246,13 @@ export class ToolsComponent implements OnInit {
         } else {
             console.log("error")
         }
-      })
+      },
+        // On Error
+        (err:any) => {
+          console.log(err);
+        },
+        // Finally
+        () => this.showLoader = false);
   }
 
   public onCalcTypeSelect(){
