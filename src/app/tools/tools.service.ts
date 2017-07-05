@@ -28,6 +28,17 @@ export class ToolsService{
         this.config = configService.config;
     }
 
+    public checkUser() : Observable<string>{
+        let url = this.config.apiUrl+"/checkuser";
+        return this.http.get(url)
+                   .map((res: Response) => {
+                        let result = res.json();
+                        //TODO you can do stuff with the values here if you want
+                        return result;
+                   })
+                   .catch(this._handleError);
+    }
+
     public convertVolumeFlowRate(value : string, bToCfm : string) : Observable<string>{
         let parms = '/'+value+'/'+bToCfm;
         let url = this.config.apiUrl+"/convertvolumeflowrate"+parms;

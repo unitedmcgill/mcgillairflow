@@ -9,16 +9,20 @@
           <ul>
             <li>Convert Volume Flow Rate</li>
             <li>Convert Duct Types to round, oval, or rectangular</li>
-            <li>Pressure Calculations for bursting or collapse</li>
-            <li>Support Design checks if supports are well spaced</li>
-            <li>Stack Design checks if deflection is within tollerance</li>
-            <li>Underground Duct checks for collapse</li>
+            <li>Perform pressure, stiffener spacing, and guage calculations</li>
+            <li *ngIf="showSED">* Pressure Calculations for bursting or collapse</li>
+            <li *ngIf="showSED">* Support Design checks if supports are well spaced</li>
+            <li *ngIf="showSED">* Stack Design checks if deflection is within tollerance</li>
+            <li *ngIf="showSED">* Underground Duct checks for collapse</li>
             <li>Calculate Thermal Data</li>
-            <li>Oval/Rect Reinforcement</li>
-            <li>Duct-D-Fuser calculates the required duct sections</li>
-            <li>Factair calcuates the generated noise levels</li>
-            <li>Offset calcuates length of duct between elbows</li>
-            <li>Acoustical calculates noise levels</li>
+            <li *ngIf="showSED">* Oval/Rect Reinforcement</li>
+            <li *ngIf="showSED">* Duct-D-Fuser calculates the required duct sections</li>
+            <li *ngIf="showSED">* Factair calcuates the generated noise levels</li>
+            <li *ngIf="showSED">* Offset calcuates length of duct between elbows</li>
+            <li *ngIf="showSED">* Acoustical calculates noise levels</li>           
+          </ul>
+          <ul class="list-unstyled">
+            <li *ngIf="showSED">* Indicates former SED function <u>only available to internal associates</u></li>
           </ul>
           <b>HOW TO USE:</b>
           <ul>
@@ -212,7 +216,7 @@
       </div>
     </tab>
     <!--Pressure / Stiffener / Gauge-->
-      <tab heading="Pressure / Stiffener / Gauge">
+    <tab *ngIf="showSED" heading="Pressure / Stiffener / Gauge">
       <div class="card card-block card-outline-primary ">
         <h4 class="card-title">Pressure / Stiffener / Gauge</h4>
         <hr class="hr-blue">
@@ -368,7 +372,7 @@
     </tab>
 
     <!--Burst / Collapse-->
-      <tab heading="Burst / Collapse">
+    <tab *ngIf="showSED" heading="Burst / Collapse">
       <div class="card card-block card-outline-primary ">
         <h4 class="card-title">Burst / Collapse</h4>
         <hr class="hr-blue">
@@ -479,7 +483,7 @@
     </tab>
 
     <!--Support Design-->
-      <tab heading="Support Design">
+    <tab *ngIf="showSED" heading="Support Design">
       <div class="card card-block card-outline-primary ">
         <h4 class="card-title">Support Design</h4>
         <hr class="hr-blue">
@@ -670,7 +674,7 @@
     </tab>
 
     <!--Stack Design-->
-    <tab heading="Stack Design">
+    <tab *ngIf="showSED" heading="Stack Design">
       <div class="card card-block card-outline-primary ">
         <h4 class="card-title">Stack Design Check</h4>
         <hr class="hr-blue">
@@ -811,7 +815,7 @@
     </tab>
 
     <!--Underground Design-->
-    <tab heading="Underground Design">
+    <tab *ngIf="showSED" heading="Underground Design">
       <div class="card card-block card-outline-primary ">
         <h4 class="card-title">Underground Design Check</h4>
         <hr class="hr-blue">
@@ -1164,7 +1168,7 @@
     </tab>
 
     <!--Rect/Oval Reinforcement Design-->
-    <tab heading="Reinforcement">
+    <tab *ngIf="showSED" heading="Reinforcement">
       <div class="card card-block card-outline-primary ">
         <h4 class="card-title">Flat Oval and Rectangular Duct Reinforcement</h4>
         <hr class="hr-blue">
@@ -1294,7 +1298,7 @@
     </tab>
 
     <!--Orifice Tube-->
-    <tab heading="Orifice Tube">
+    <tab *ngIf="showSED" heading="Orifice Tube">
       <div class="card card-block card-outline-primary ">
         <h4 class="card-title">Special Tube Designer Tool</h4>
         <hr class="hr-blue">
@@ -1407,7 +1411,7 @@
     </tab>
 
     <!--DDF-->
-    <tab heading="Duct-D-Fuser">
+    <tab *ngIf="showSED" heading="Duct-D-Fuser">
       <div class="card card-block card-outline-primary ">
         <h4 class="card-title">Duct-D-Fuser Designer Tool</h4>
         <hr class="hr-blue">
@@ -1517,7 +1521,7 @@
     </tab>
 
     <!--Factair-->
-    <tab heading="Factair">
+    <tab *ngIf="showSED" heading="Factair">
       <div class="card card-block card-outline-primary ">
         <h4 class="card-title">Factair Designer Tool</h4>
         <hr class="hr-blue">
@@ -1623,7 +1627,7 @@
     </tab>
 
     <!--Offset-->
-    <tab heading="Offset">
+    <tab *ngIf="showSED" heading="Offset">
       <div class="card card-block card-outline-primary ">
         <h4 class="card-title">Offset Designer Tool</h4>
         <hr class="hr-blue">
@@ -1772,7 +1776,7 @@
     </tab>
 
     <!--Acoustical-->
-    <tab heading="Acoustical">
+    <tab *ngIf="showSED" heading="Acoustical">
       <div class="card card-block card-outline-primary ">
         <h4 class="card-title">Acoustical Designer Tool</h4>
         <hr class="hr-blue">

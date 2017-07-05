@@ -21,6 +21,8 @@ import { IAcoustical } from '../models/acoustical';
 })
 export class ToolsComponent implements OnInit {
 
+  public showSED = false;
+
   public numbers125 = [
     { value: 1, display: '1'},
     { value: 2, display: '2'},
@@ -602,6 +604,14 @@ export class ToolsComponent implements OnInit {
     };
 
     this.burst = this.burstCollapse[0].value;
+
+    // Internal or External user
+    this.toolsService.checkUser()
+      .subscribe((result:string) => {
+          if ( result == "1"){
+            this.showSED = true;
+          }
+      })
   }
 
   public onConvertVolumeFlowRate(){
