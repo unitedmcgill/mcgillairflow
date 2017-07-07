@@ -220,3 +220,133 @@ p.mcgill-gold{
     transform: rotate(360deg);
   }
 }
+
+#keytable {
+    max-width: 750px;
+}
+
+#keytable tr{
+    line-height:12px;
+}
+
+#keytable td, th{
+    padding:1px;
+}
+
+.topheader {
+	font-size: 12px;
+	font-weight: bold;
+	background-color: #1171a3;
+	text-align: center;
+	vertical-align: middle;
+	color: #FFFFFF;
+	padding: 5px 0;
+}
+
+.columntitle {
+	background-color: white;
+	color: black;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: center;
+	padding: 5px 0;
+}
+
+.firstkey, .lastkey {
+	font-size: 10px;
+	padding: 1px;
+	text-align: left;
+	border-top: 0;
+	border-bottom: 0;
+}
+
+.colorkey {
+	font-size: 10px;
+	font-weight: bold;
+	padding: 1px;
+	text-align: center;
+    max-width:5px;
+}
+
+.middlekey {
+	font-size: 10px;
+	padding: 1px;
+	text-align: left;
+	border-top: 0;
+	border-bottom: 0;
+}
+
+.desckey {
+	font-size: 10px;
+	padding: 1px;
+	text-align: center;
+	border-top: 0;
+}
+
+.topblank {
+	font-size: 6px;
+	border-right: 0;
+	border-bottom: 0;
+}
+
+.topleft {
+	 font-size: 6px;
+	 border-bottom: 0;
+	 border-left: 0;
+}
+
+.topright {
+	font-size: 6px;
+	border-right: 0;
+	border-bottom: 0;
+}
+
+.toplast {
+	font-size: 6px;
+	border-bottom: 0;
+	border-left: 0;
+}
+
+.firstblank {
+	font-size: 6px;
+	border-top: 0;
+	border-right: 0;
+	border-bottom: 0;
+}
+
+.colorblank {
+	font-size: 6px;
+	border-right: 0;
+	border-bottom: 0;
+	border-left: 0;
+}
+
+.rightblank {
+	font-size: 6px;
+	border-top: 0;
+	border-right: 0;
+	border-bottom: 0;
+}
+
+.leftblank {
+	font-size: 6px;
+	border-top: 0;
+	border-bottom: 0;
+	border-left: 0;
+}
+
+.lastblank {
+	font-size: 6px;
+	border-top: 0;
+	border-bottom: 0;
+	border-left: 0;
+}
+
+.allblank {
+	font-size: 6px;
+	border: 0;
+}
+
+.mcgill-black{
+    color: black;
+}

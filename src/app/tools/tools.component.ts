@@ -13,6 +13,7 @@ import { IDuctDFuser } from '../models/duct-d-fuser';
 import { IFactair } from '../models/factair';
 import { IOffset } from '../models/offset';
 import { IAcoustical } from '../models/acoustical';
+import { IRectSilencer } from '../models/rect-silencer';
 
 @Component({
   //selector: 'app-tools',
@@ -22,6 +23,15 @@ import { IAcoustical } from '../models/acoustical';
 export class ToolsComponent implements OnInit {
 
   public showSED = false;
+  public tag = '';
+
+  public silencerTypes = [
+    { value: 'Standard', display: 'Standard Silencers'},
+    { value: 'LowFrequency', display: 'Low Frequency Silencers'},
+    { value: 'Erosion', display: 'Erosion Resistant Silencers'},
+    { value: 'NoFill', display: 'No Fill Silencers'},
+    { value: '', display: 'All Silencers'}
+  ];
 
   public numbers125 = [
     { value: 1, display: '1'},
@@ -236,6 +246,26 @@ export class ToolsComponent implements OnInit {
     { value: 50, display: '50'},
     { value: 70, display: '70'},
     { value: 90, display: '90'}
+  ];
+
+  public savedResultsRectSilencer = [
+    { Tag: 'Tag',
+      Model: 'Model',
+      Length: 'Len',
+      Width: 'Wd.',
+      Height: 'Ht.',
+      PressureDrop: 'Press',
+      Weight: 'Wt.',
+      Freq1: '63',
+      Freq2: '125',
+      Freq3: '250',
+      Freq4: '500',
+      Freq5: '1K',
+      Freq6: '2K',
+      Freq7: '4K',
+      Freq8: '8K',
+      Selection: ''
+    }
   ];
 
   public savedResultsOffset = [
@@ -592,6 +622,28 @@ export class ToolsComponent implements OnInit {
     overall : 0
   };
 
+  public rectSilencer : IRectSilencer = {
+    cfm : 2000,
+    width : 20,
+    height : 15,
+    pressureDrop : 0.3,
+    calcVelocity : 960,
+    displayVelocity : 960,
+    freq1 : 4,
+    freq2 : 0,
+    freq3 : 0,
+    freq4 : 0,
+    freq5 : 0,
+    freq6 : 0,
+    freq7 : 0,
+    freq8 : 0,
+    elbow : this.yesnoInt[0].value,
+    louver : this.yesnoInt[0].value,
+    wide : this.yesnoInt[0].value,
+    type : this.silencerTypes[4].value,
+    silencers : []
+  };
+
   constructor( private toolsService: ToolsService) {
     //this.active = true;
    }
@@ -906,6 +958,32 @@ export class ToolsComponent implements OnInit {
             // console.log(this.ductConvert);
             // const duct = JSON.stringify(data);
             this.acoustical = data;
+            // console.log(this.ductConvert);
+          } else {
+            console.log("error");
+          }
+      },
+        // On Error
+        (err:any) => {
+          console.log(err);
+        },
+        // Finally
+        () => this.showLoader = false);
+  }
+
+  public onSelectRectSilencer(){
+    this.showLoader = true;
+    this.toolsService.selectRectSilencer(this.rectSilencer)
+      .subscribe((data:IRectSilencer) => {
+          if ( data ){
+            // console.log(data);
+            // console.log(this.ductConvert);
+            // const duct = JSON.stringify(data);
+            this.rectSilencer = data;
+            // var foo = this.rectSilencer.silencers[0];
+            // for(let noo of this.rectSilencer.silencers){
+            //   console.log(noo);
+            // }
             // console.log(this.ductConvert);
           } else {
             console.log("error");
@@ -1247,6 +1325,10 @@ export class ToolsComponent implements OnInit {
     this.savedResultsBurst.push(saveResult);
   }
 
+  public onSaveResultsRect(){
+
+  }
+
   public onBurstCollapse(){
     this.showLoader = true;
     this.toolsService.calcBurstCollapse(this.burst, this.operatingPressure)
@@ -1281,6 +1363,108 @@ export class ToolsComponent implements OnInit {
                     [0,0,0,0,0,0,0,0]];
     this.acoustical.overall = 0;
     this.acoustical.levels = this.numbers125[0].value;
+  }
+
+  public getAbs(value){
+    return Math.abs(value);
+  }
+
+  public getFreqPDropStyle( freq, acceptable ){
+    var sOutput;
+
+    if (freq < 0) {
+        if (acceptable > 2) {
+            sOutput = {'background-color':'#ACD913', color:'#000000'};
+        }
+        else {
+            sOutput = {'background-color':'#BE0000'};
+        }
+    }
+    else {
+        sOutput = {'background-color':'#396830'};
+    }
+
+    return sOutput;    
+  }
+
+  public loadPDF( filename ){
+    var win = window.open('assets/literature/'+filename+'.pdf', '_blank');
+    win.focus();
+  }
+
+  public showModel( model ){
+    var cModel = model.charAt(1);
+
+    if ( cModel == 'E' && this.rectSilencer.elbow == 0 ) return false;
+    if ( cModel == 'L' && this.rectSilencer.louver == 0 ) return false;
+    if ( cModel == 'W' && this.rectSilencer.wide == 0 ) return false;
+    
+    return true;
+  }
+
+  public getAcceptableValue(acceptable){
+    switch (acceptable) {
+        case 5:
+            return "A";
+        case 4:
+            return "B";
+        case 3:
+            return "C";
+        case 2:
+            return "D";
+        case 1:
+            return "F";
+    }   
+  }
+
+  public getAcceptableStyle(acceptable){
+    switch (acceptable) {
+        case 5:
+            return {'background-color':'#396830'};
+        case 4:
+            return {'background-color':'#ACD913', color:'#000000'};
+        case 3:
+            return {'background-color':'#FBF302', color:'#000000'};
+        case 2:
+            return {'background-color':'#CD5D00'};
+        case 1:
+            return {'background-color':'#BE0000'};
+    }    
+  }
+
+  public getModelStyle( model ){
+    var sOutput;
+
+    if (model.indexOf("CE") == 0 || model.lastIndexOf("*") == model.length - 1) {
+        sOutput = {'background-color':'#2F2F2F', color:'#FFFFFF'};
+    }
+    else if (model.indexOf("RSV") == 0 || model.lastIndexOf("T") == model.length - 1) {
+        sOutput = {'background-color':'#C0C0C0', color:'#000000'};
+    }
+    else {
+        sOutput = {'background-color':'#FFFFFF', color:'#000000'};
+    }
+
+    return sOutput;   
+  }
+
+  public getModelValue( model, includeDashes ){
+    if (model.lastIndexOf("*") == model.length - 1) {
+        var m = model.replace("*", "");
+    }
+    else if (model.lastIndexOf("T") == model.length - 1) {
+        var m = model.replace("T", "");
+    }
+    else {
+        var m = model;
+    }
+
+    if (includeDashes) {
+        return m.substr(0, 3) + '-' + m.substr(3, 2) + '-' + m.substr(5);
+    }
+    else {
+        return m;
+    }    
   }
 
   public onRemoveResult(i){

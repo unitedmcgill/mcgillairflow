@@ -2612,6 +2612,381 @@
 
       </div>
     </tab>
+
+    <!--RectSelect-->
+    <tab heading="Rectangular Silencers">
+      <div class="card card-block card-outline-primary ">
+        <h4 class="card-title">Sounpak® Rectangular Silencer Selector</h4>
+        <hr class="hr-blue">
+        <span>This web tool calculates recommended Sounpak rectangular silencer models for given physical, acoustical, and pressure specifications. It also displays applicable data for the suggested silencers.  The only fields required are the volume flow rate, the width, and the height.	All other fields that are blank will be treated as "don't care" values. The Sounpak model designations are links that will take you to detailed data for that silencer. The Save Result column button can be used to save the silencer to a schedule that is shown at the bottom of the page. When the schedule is complete, it can be saved to pdf, word, or excel file on your computer.</span>
+        <hr class="hr-blue" ><br />
+        <form (ngSubmit)="onSelectRectSilencer()" #rectsilence="ngForm">     
+          
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Tag (used to save results)
+            </label>
+            <div class="col-xs-3">
+              <input type="text" class="form-control" [(ngModel)]="tag" name="tag" (click)="$event.target.select()"/>
+            </div>
+          </div>  
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" for="value-input">Volume Flow Rate (cfm) if negative, flow is reversed
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="rectSilencer.cfm" name="cfm" #cfm="ngModel" required (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="cfm.errors && (cfm.dirty || cfm.touched )">
+                <p *ngIf="cfm.errors.required">
+                    The cfm is required
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" for="value-input">Width (inches)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="rectSilencer.width" name="width" #width="ngModel" required (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="width.errors && (width.dirty || width.touched )">
+                <p *ngIf="width.errors.required">
+                    The width is required
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" for="value-input">Height (inches)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" class="form-control" [(ngModel)]="rectSilencer.height" name="height" #height="ngModel" required (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="height.errors && (height.dirty || height.touched )">
+                <p *ngIf="height.errors.required">
+                    The height is required
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" for="value-input">Pressure Drop Limit (inches)
+            </label>
+            <div class="col-xs-3">
+              <input type="number" step="any" class="form-control" [(ngModel)]="rectSilencer.pressureDrop" name="pressureDrop" #pressureDrop="ngModel" required (click)="$event.target.select()"/>
+              <div class="alert alert-danger" *ngIf="pressureDrop.errors && (pressureDrop.dirty || pressureDrop.touched )">
+                <p *ngIf="pressureDrop.errors.required">
+                    The Pressure Drop is required
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" for="value-input">Calculated Velocity (updated after calculation)
+            </label>
+            <div class="col-xs-3">
+              <label>
+                {{rectSilencer.calcVelocity}}
+              </label>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label" for="value-input">Enter Required Insertion Loss for the following:
+            </label>
+          </div>
+          <div class="col-xs-12 form-group row">
+              <div class="col-xs-2">
+                63 Hz (db):
+              </div>
+              <div class="col-xs-2">
+                <input type="number" class="form-control" [(ngModel)]="rectSilencer.freq1" name="freq1" #freq1="ngModel" (click)="$event.target.select()"/>
+              </div>
+          </div>
+          <div class="col-xs-12 form-group row">
+              <div class="col-xs-2">
+                125 Hz (db):
+              </div>
+              <div class="col-xs-2">
+                <input type="number" class="form-control" [(ngModel)]="rectSilencer.freq2" name="freq2" #freq2="ngModel" (click)="$event.target.select()"/>
+              </div>
+          </div>
+          <div class="col-xs-12 form-group row">
+              <div class="col-xs-2">
+                250 Hz (db):
+              </div>
+              <div class="col-xs-2">
+                <input type="number" class="form-control" [(ngModel)]="rectSilencer.freq3" name="freq3" #freq3="ngModel" (click)="$event.target.select()"/>
+              </div>
+          </div>
+          <div class="col-xs-12 form-group row">
+              <div class="col-xs-2">
+                500 Hz (db):
+              </div>
+              <div class="col-xs-2">
+                <input type="number" class="form-control" [(ngModel)]="rectSilencer.freq4" name="freq4" #freq4="ngModel" (click)="$event.target.select()"/>
+              </div>
+          </div>
+          <div class="col-xs-12 form-group row">
+              <div class="col-xs-2">
+                1K Hz (db):
+              </div>
+              <div class="col-xs-2">
+                <input type="number" class="form-control" [(ngModel)]="rectSilencer.freq5" name="freq5" #freq5="ngModel" (click)="$event.target.select()"/>
+              </div>
+          </div>
+          <div class="col-xs-12 form-group row">
+              <div class="col-xs-2">
+                2K Hz (db):
+              </div>
+              <div class="col-xs-2">
+                <input type="number" class="form-control" [(ngModel)]="rectSilencer.freq6" name="freq6" #freq6="ngModel" (click)="$event.target.select()"/>
+              </div>
+          </div>
+          <div class="col-xs-12 form-group row">
+              <div class="col-xs-2">
+                4K Hz (db):
+              </div>
+              <div class="col-xs-2">
+                <input type="number" class="form-control" [(ngModel)]="rectSilencer.freq7" name="freq7" #freq7="ngModel" (click)="$event.target.select()"/>
+              </div>
+          </div>
+          <div class="col-xs-12 form-group row">
+              <div class="col-xs-2">
+                8K Hz (db):
+              </div>
+              <div class="col-xs-2">
+                <input type="number" class="form-control" [(ngModel)]="rectSilencer.freq8" name="freq8" #freq8="ngModel" (click)="$event.target.select()"/>
+              </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Allow Elbow Silencers?</label>
+            <div class="col-xs-4">
+              <div class="col-xs-2" *ngFor="let answer of yesnoInt">
+                <input type="radio" [(ngModel)]="rectSilencer.elbow" name="elbow" [value]="answer.value">{{answer.display}}
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Allow Acoustical Louvers?</label>
+            <div class="col-xs-4">
+              <div class="col-xs-2" *ngFor="let answer of yesnoInt">
+                <input type="radio" [(ngModel)]="rectSilencer.louver" name="louver" [value]="answer.value">{{answer.display}}
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xs-4 col-form-label">Allow Wide Body Silencers?</label>
+            <div class="col-xs-4">
+              <div class="col-xs-2" *ngFor="let answer of yesnoInt">
+                <input type="radio" [(ngModel)]="rectSilencer.wide" name="wide" [value]="answer.value">{{answer.display}}
+              </div>
+            </div>
+          </div>
+
+
+
+          <div class="form-group row">
+            <button [disabled]="rectsilence.invalid" type="submit" class="btn-space btn btn-success">Calculate</button> 
+          </div>
+        </form>
+
+        <form (ngSubmit)="onSaveResultsRect()" #r13="ngForm">
+          <!-- Calculate Offset Design Results -->
+          <div class="form-group row">
+            <label class="col-xs-12 col-form-label"><b>** Click models in the Soundpak Model column to view PDF datasheets!</b>
+            </label>
+          </div>
+            <table>
+              <thead>
+                <tr>
+                    <th colspan="14" style="text-align:center"><b>Sounpak Silencer Results</b></th>
+                </tr>
+                <tr class="text-center">
+                  <td>Soundpak<br />Model</td>
+                  <td>Length</td>
+                  <td>63 Hz<br />dB</td>
+                  <td>125 Hz<br />dB</td>
+                  <td>250 Hz<br />dB</td>
+                  <td>500 Hz<br />dB</td>
+                  <td>1K Hz<br />dB</td>
+                  <td>2K Hz<br />dB</td>
+                  <td>4K Hz<br />dB</td>
+                  <td>8K Hz<br />dB</td>
+                  <td>Pressure Drop<br />(inches of <br />water)</td>
+                  <td>Weight<br />(lbs)</td>
+                  <td>Selection</td>
+                  <td>Save<br />Result</td>
+                </tr>
+              </thead>
+              <ng-container *ngFor="let silencer of rectSilencer.silencers; let i = index">
+                <tr class="text-center" *ngIf="showModel(silencer.model)" >
+                  <td [ngStyle]="getModelStyle(silencer.model)">
+                    <a [ngStyle]="getModelStyle(silencer.model)" (click)="loadPDF(getModelValue(silencer.model, false))">
+                    {{getModelValue(silencer.model, true)}}
+                    </a>
+                  </td>
+                  <td style="background-color: white; color:black;">{{silencer.length}}</td>
+                  <td [ngStyle]="getFreqPDropStyle(silencer.freqOne,silencer.acceptable)">{{getAbs(silencer.freqOne)}}</td>
+                  <td [ngStyle]="getFreqPDropStyle(silencer.freqTwo,silencer.acceptable)">{{getAbs(silencer.freqTwo)}}</td>
+                  <td [ngStyle]="getFreqPDropStyle(silencer.freqThree,silencer.acceptable)">{{getAbs(silencer.freqThree)}}</td>
+                  <td [ngStyle]="getFreqPDropStyle(silencer.freqFour,silencer.acceptable)">{{getAbs(silencer.freqFour)}}</td>
+                  <td [ngStyle]="getFreqPDropStyle(silencer.freqFive,silencer.acceptable)">{{getAbs(silencer.freqFive)}}</td>
+                  <td [ngStyle]="getFreqPDropStyle(silencer.freqSix,silencer.acceptable)">{{getAbs(silencer.freqSix)}}</td>
+                  <td [ngStyle]="getFreqPDropStyle(silencer.freqSeven,silencer.acceptable)">{{getAbs(silencer.freqSeven)}}</td>
+                  <td [ngStyle]="getFreqPDropStyle(silencer.freqEight,silencer.acceptable)">{{getAbs(silencer.freqEight)}}</td>
+                  <td [ngStyle]="getFreqPDropStyle(silencer.pressureDrop,silencer.acceptable)">{{getAbs(silencer.pressureDrop)}}</td>
+                  <td style="background-color: white; color:black;">{{silencer.weight}}</td>
+                  <td [ngStyle]="getAcceptableStyle(silencer.acceptable)">{{getAcceptableValue(silencer.acceptable)}}</td>
+                  <td>&nbsp;</td>
+                </tr>
+              </ng-container>
+            </table>
+
+            <table id="keytable" border=1 cellpadding="5" bordercolor="#999999" cellspacing="0">
+              <tr>
+                  <td class="topheader" colspan="9">Results Key</td>
+              </tr>
+              <tr>
+                  <td class="columntitle" colspan="3" width="30%">Sounpak Model Color Code</td>
+                  <td class="columntitle" colspan="3" width="30%">Insertion Loss/Pressure Drop Color Code</td>
+                  <td class="columntitle" colspan="3" width="30%">Selection Color Code</td>
+              </tr>
+              <tr>
+                  <td class="topblank">&nbsp;</td>
+                  <td class="colorblank">&nbsp;</td>
+                  <td class="topleft">&nbsp;</td>
+                  <td class="topright">&nbsp;</td>
+                  <td class="colorblank">&nbsp;</td>
+                  <td class="topleft">&nbsp;</td>
+                  <td class="topright">&nbsp;</td>
+                  <td class="colorblank">&nbsp;</td>
+                  <td class="toplast">&nbsp;</td>
+              </tr>
+              <tr>
+                  <td class="firstkey">&nbsp;</td>
+                  <td class="colorkey" bgcolor="#FFFFFF" style="color:black">Designation</td>
+                  <td class="middlekey">&nbsp;</td>
+                  <td class="middlekey">&nbsp;</td>
+                  <td class="colorkey" bgcolor="#396830" style="color:#FFFFFF">Value</td>
+                  <td class="middlekey">&nbsp;</td>
+                  <td class="middlekey">&nbsp;</td>
+                  <td class="colorkey" bgcolor="#396830" style="color:#FFFFFF">A</td>
+                  <td class="lastkey">&nbsp;</td>
+              </tr>
+              <tr>
+                  <td class="firstblank">&nbsp;</td>
+                  <td class="colorblank">&nbsp;</td>
+                  <td class="leftblank">&nbsp;</td>
+                  <td class="rightblank">&nbsp;</td>
+                  <td class="colorblank">&nbsp;</td>
+                  <td class="leftblank">&nbsp;</td>
+                  <td class="rightblank">&nbsp;</td>
+                  <td class="colorblank">&nbsp;</td>
+                  <td class="lastblank">&nbsp;</td>
+              </tr>
+              <tr>
+                  <td class="desckey" colspan="3">Standard Sounpak Silencer</td>
+                  <td class="desckey" colspan="3">Insertion Loss Is within 0.5dB for the Octave or Pressure Drop Is within 10%</td>
+                  <td class="desckey" colspan="3">Sounpak Silencer Meets or Exceeds Required Insertion Loss and Pressure Drop</td>
+              </tr>
+              <tr>
+                  <td class="topblank">&nbsp;</td>
+                  <td class="colorblank">&nbsp;</td>
+                  <td class="topleft">&nbsp;</td>
+                  <td class="topright">&nbsp;</td>
+                  <td class="colorblank">&nbsp;</td>
+                  <td class="topleft">&nbsp;</td>
+                  <td class="topright">&nbsp;</td>
+                  <td class="colorblank">&nbsp;</td>
+                  <td class="toplast">&nbsp;</td>
+              </tr>
+              <tr>
+                  <td class="firstkey">&nbsp;</td>
+                  <td class="colorkey mcgill-black" bgcolor="#C0C0C0">Designation</td>
+                  <td class="middlekey">&nbsp;</td>
+                  <td class="middlekey">&nbsp;</td>
+                  <td class="colorkey mcgill-black" bgcolor="#ACD913">Value</td>
+                  <td class="middlekey">&nbsp;</td>
+                  <td class="middlekey">&nbsp;</td>
+                  <td class="colorkey mcgill-black" bgcolor="#ACD913">B</td>
+                  <td class="lastkey">&nbsp;</td>
+              </tr>
+              <tr>
+                  <td class="firstblank">&nbsp;</td>
+                  <td class="colorblank">&nbsp;</td>
+                  <td class="leftblank">&nbsp;</td>
+                  <td class="rightblank">&nbsp;</td>
+                  <td class="colorblank">&nbsp;</td>
+                  <td class="leftblank">&nbsp;</td>
+                  <td class="rightblank">&nbsp;</td>
+                  <td class="colorblank">&nbsp;</td>
+                  <td class="lastblank">&nbsp;</td>
+              </tr>
+              <tr>
+                  <td class="desckey" colspan="3">Sounpak Silencer with a Vapor Barrier</td>
+                  <td class="desckey" colspan="3">Insertion Loss Is within 6dB for 63 Hz or 3dB for All Other Octaves or Pressure Drop Is within 20%</td>
+                  <td class="desckey" colspan="3">Sounpak Silencer Meets Required Insertion Loss or Pressure Drop within ASTM Interlaboratory Variance</td>
+              </tr>
+              <tr>
+                  <td class="topblank">&nbsp;</td>
+                  <td class="colorblank">&nbsp;</td>
+                  <td class="topleft">&nbsp;</td>
+                  <td class="topright">&nbsp;</td>
+                  <td class="colorblank">&nbsp;</td>
+                  <td class="topleft">&nbsp;</td>
+                  <td class="topright">&nbsp;</td>
+                  <td class="colorblank">&nbsp;</td>
+                  <td class="toplast">&nbsp;</td>
+              </tr>
+              <tr>
+                  <td class="firstkey">&nbsp;</td>
+                  <td class="colorkey" bgcolor="#2F2F2F" style="color:#FFFFFF">Designation</td>
+                  <td class="middlekey">&nbsp;</td>
+                  <td class="firstblank">&nbsp;</td>
+                  <td class="colorkey" bgcolor="#BE0000" style="color:#FFFFFF">Value</td>
+                  <td class="leftblank">&nbsp;</td>
+                  <td class="colorkey mcgill-black" bgcolor="#FBF302">C</td>
+                  <td class="colorkey" bgcolor="#CD5D00">D</td>
+                  <td class="colorkey" bgcolor="#BE0000">F</td>
+              </tr>
+              <tr>
+                  <td class="firstblank">&nbsp;</td>
+                  <td class="colorblank">&nbsp;</td>
+                  <td class="leftblank">&nbsp;</td>
+                  <td class="rightblank">&nbsp;</td>
+                  <td class="allblank">&nbsp;</td>
+                  <td class="leftblank">&nbsp;</td>
+                  <td class="rightblank">&nbsp;</td>
+                  <td class="colorblank">&nbsp;</td>
+                  <td class="lastblank">&nbsp;</td>
+              </tr>
+              <tr>
+                  <td class="desckey" colspan="3">Sounpak Silencer with a Special Order Vapor Barrier Approved by the FDA</td>
+                  <td class="desckey" colspan="3">Insertion Loss Is within 7dB for At Least One Octave or Pressure Drop Is within 50%</td>
+                  <td class="desckey" colspan="3">Borderline Sounpak Silencer - Check with Design Engineer</td>
+              </tr>
+              <tr>
+                  <td colspan="9" align="left">
+                      <div>
+                          <p>
+                              <b>Note:</b><br /><br />
+                              1. ASTM interlaboratory testing has shown insertion loss may vary as much as 6 dB in the 63 Hz band,
+                              and 3 dB for all other frequencies.<br /><br />
+                              2. Results are not guaranteed for accuracy. McGill AirFlow/AirSilence <span class="small_LLC_NORMAL">LLC</span> has made every effort possible to ensure correct methodology and use of public domain information.
+                              It is up to the user to verify the accuracy of calculations.<br /><br />
+                              3. For more information on all silencers, please open the following file: <a href="assets/literature/silencer_performData.pdf" target="_blank">Sounpak Silencers Performance Data.pdf</a> (file size: 3.5 mb).
+                          </p>
+                      </div>
+                  </td>
+              </tr>
+            </table>
+
+          <div class="form-group row">
+            <button type="submit" class="btn-space btn btn-info">Save Result</button> 
+          </div>
+        </form>
+        <hr class="hr-blue" >
+          <!--Saved Results-->
+        <hr class="hr-blue" >
+      </div>
+    </tab>
+    
     <!--<tab *ngFor="let tabz of tabs"
          [heading]="tabz.title"
          [active]="tabz.active"
