@@ -1,4 +1,4 @@
-//import { DuctType } from '../models/duct-type';
+import { IRectSilencerResult } from '../models/rect-silencer-result';
 
 export interface IRectSilencer {
     cfm : number, // int, Volume Flow Rate (cfm), required 
@@ -19,5 +19,5 @@ export interface IRectSilencer {
     louver : number, // int 1 or 0
     wide : number, // int 1 or 0
     type : string, // Standard, LowFrequency, Erosion, NoFill, <blank> for All
-    silencers : string[]
+    silencers : IRectSilencerResult[]
 }

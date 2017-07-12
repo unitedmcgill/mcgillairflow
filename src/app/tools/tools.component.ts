@@ -14,6 +14,7 @@ import { IFactair } from '../models/factair';
 import { IOffset } from '../models/offset';
 import { IAcoustical } from '../models/acoustical';
 import { IRectSilencer } from '../models/rect-silencer';
+import { IRectSilencerResult } from '../models/rect-silencer-result';
 
 @Component({
   //selector: 'app-tools',
@@ -1325,8 +1326,49 @@ export class ToolsComponent implements OnInit {
     this.savedResultsBurst.push(saveResult);
   }
 
-  public onSaveResultsRect(){
+  public addRectSelection(silencer,i){
+    if (this.tag === undefined || this.tag.length == 0 ){
+      alert("Please fill in the tag field before selecting silencers.");
+      return;
+    }
 
+    var savedResult = {
+      Tag: this.tag,
+      Model: silencer.model,
+      Length: silencer.length,
+      Width: String(this.rectSilencer.width),
+      Height: String(this.rectSilencer.height),
+      PressureDrop: silencer.pressureDrop,
+      Weight: silencer.weight,
+      Freq1: silencer.freqOne,
+      Freq2: silencer.freqTwo,
+      Freq3: silencer.freqThree,
+      Freq4: silencer.freqFour,
+      Freq5: silencer.freqFive,
+      Freq6: silencer.freqSix,
+      Freq7: silencer.freqSeven,
+      Freq8: silencer.freqEight,
+      Selection: ""
+    }
+    //silencer.selection = true;
+    this.rectSilencer.silencers[i].selected = this.savedResultsRectSilencer.length;
+    this.savedResultsRectSilencer.push(savedResult);
+  }
+
+  public removeRectSelection(silencer, i){
+    var index = silencer.selected;
+    this.savedResultsRectSilencer.splice(silencer.selected,1);
+    this.rectSilencer.silencers[i].selected = 0;
+    // Loop over all silencers after the one removed and reduce the selection by 1
+    // for(let noo of this.rectSilencer.silencers){
+    //   if (noo.selected > i){
+    //     noo.selected = noo.selected -1;
+    //   }
+    for ( var j = 0; j < this.rectSilencer.silencers.length; j++ ){
+      if ( this.rectSilencer.silencers[j].selected > index ){
+        this.rectSilencer.silencers[j].selected = this.rectSilencer.silencers[j].selected-1;
+      }
+    }
   }
 
   public onBurstCollapse(){
@@ -1449,6 +1491,8 @@ export class ToolsComponent implements OnInit {
   }
 
   public getModelValue( model, includeDashes ){
+    if (model === "Model") return "Model";
+
     if (model.lastIndexOf("*") == model.length - 1) {
         var m = model.replace("*", "");
     }
@@ -1506,5 +1550,4 @@ export class ToolsComponent implements OnInit {
   public onRemoveOffset(i){
     this.savedResultsOffset.splice(i,1);
   }
-
 }

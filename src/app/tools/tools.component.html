@@ -2786,7 +2786,7 @@
           </div>
         </form>
 
-        <form (ngSubmit)="onSaveResultsRect()" #r13="ngForm">
+        <form #r13="ngForm">
           <!-- Calculate Offset Design Results -->
           <div class="form-group row">
             <label class="col-xs-12 col-form-label"><b>** Click models in the Soundpak Model column to view PDF datasheets!</b>
@@ -2833,7 +2833,10 @@
                   <td [ngStyle]="getFreqPDropStyle(silencer.pressureDrop,silencer.acceptable)">{{getAbs(silencer.pressureDrop)}}</td>
                   <td style="background-color: white; color:black;">{{silencer.weight}}</td>
                   <td [ngStyle]="getAcceptableStyle(silencer.acceptable)">{{getAcceptableValue(silencer.acceptable)}}</td>
-                  <td>&nbsp;</td>
+                  <td>
+                    <button *ngIf="silencer.selected==0" class="btn btn-info" (click)="addRectSelection(silencer,i)">Select</button>
+                    <button *ngIf="silencer.selected>0" class="btn btn-warning" (click)="removeRectSelection(silencer,i)">Remove</button>
+                  </td>
                 </tr>
               </ng-container>
             </table>
@@ -2976,13 +2979,34 @@
                   </td>
               </tr>
             </table>
-
-          <div class="form-group row">
-            <button type="submit" class="btn-space btn btn-info">Save Result</button> 
-          </div>
         </form>
-        <hr class="hr-blue" >
+          <hr class="hr-blue" >
+          <div class="col-xs-12 text-center">Sounpak Silencer Saved Selection Schedule</div>
+          <hr class="hr-blue" >
           <!--Saved Results-->
+          <div class="row">
+                <div class = "col-xs-12" *ngFor="let result of savedResultsRectSilencer; let i = index">
+                  <div class = "col-xs-1">{{result.Tag}}</div>
+                  <div class = "col-xs-2">{{getModelValue(result.Model, true)}}</div>  
+                  <div class = "col-xs-1">{{result.Length}}</div>
+                  <div class = "col-xs-1">{{result.Width}}</div>
+                  <div class = "col-xs-1">{{result.Height}}</div>
+                  <div class = "col-xs-1">{{result.Freq1}}</div>
+                  <div class = "col-xs-1">{{result.Freq2}}</div>
+                  <div class = "col-xs-1">{{result.Freq3}}</div>
+                  <div class = "col-xs-1">{{result.Freq4}}</div>
+                  <div class = "col-xs-1">{{result.Freq5}}</div>
+                  <div class = "col-xs-1">{{result.Freq6}}</div>
+                </div>
+          </div>
+          <div class="row">
+                <div class = "col-xs-12" *ngFor="let result of savedResultsRectSilencer; let i = index">
+                  <div class = "col-xs-1">{{result.Freq7}}</div>
+                  <div class = "col-xs-1">{{result.Freq8}}</div>
+                  <div class = "col-xs-1">{{result.PressureDrop}}</div>
+                  <div class = "col-xs-1">{{result.Weight}}</div>
+                </div>
+          </div>
         <hr class="hr-blue" >
       </div>
     </tab>
