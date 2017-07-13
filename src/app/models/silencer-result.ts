@@ -1,6 +1,6 @@
 //import { DuctType } from '../models/duct-type';
 
-export interface IRectSilencerResult {
+export interface ISilencerResult {
     model : string,
     length : number, // decimal, required (inches)
     freq1 : number, // int
@@ -16,5 +16,6 @@ export interface IRectSilencerResult {
     acceptable : number,
     velocity : number,
     type : string,
-    selected : number
+    selected : number,
+    diameter : number
 }

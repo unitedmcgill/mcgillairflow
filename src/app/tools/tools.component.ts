@@ -14,7 +14,8 @@ import { IFactair } from '../models/factair';
 import { IOffset } from '../models/offset';
 import { IAcoustical } from '../models/acoustical';
 import { IRectSilencer } from '../models/rect-silencer';
-import { IRectSilencerResult } from '../models/rect-silencer-result';
+import { IRoundSilencer } from '../models/round-silencer';
+import { ISilencerResult } from '../models/silencer-result';
 
 @Component({
   //selector: 'app-tools',
@@ -31,6 +32,13 @@ export class ToolsComponent implements OnInit {
     { value: 'LowFrequency', display: 'Low Frequency Silencers'},
     { value: 'Erosion', display: 'Erosion Resistant Silencers'},
     { value: 'NoFill', display: 'No Fill Silencers'},
+    { value: '', display: 'All Silencers'}
+  ];
+
+  public roundSilencerTypes = [
+    { value: 'Single', display: 'Single Wall Silencers'},
+    { value: 'Double', display: 'Double Wall Silencers'},
+    { value: 'DoubleNoLoss', display: 'Double Wall No Loss Silencers'},
     { value: '', display: 'All Silencers'}
   ];
 
@@ -255,6 +263,25 @@ export class ToolsComponent implements OnInit {
       Length: 'Len',
       Width: 'Wd.',
       Height: 'Ht.',
+      PressureDrop: 'Press',
+      Weight: 'Wt.',
+      Freq1: '63',
+      Freq2: '125',
+      Freq3: '250',
+      Freq4: '500',
+      Freq5: '1K',
+      Freq6: '2K',
+      Freq7: '4K',
+      Freq8: '8K',
+      Selection: ''
+    }
+  ];
+
+  public savedResultsRoundSilencer = [
+    { Tag: 'Tag',
+      Model: 'Model',
+      Length: 'Len',
+      Diameter: 'Dia.',
       PressureDrop: 'Press',
       Weight: 'Wt.',
       Freq1: '63',
@@ -645,6 +672,25 @@ export class ToolsComponent implements OnInit {
     silencers : []
   };
 
+  public roundSilencer : IRoundSilencer = {
+    cfm : 2000,
+    diameter : 20,
+    pressureDrop : 0.3,
+    calcVelocity : 917,
+    displayVelocity : 917,
+    freq1 : 4,
+    freq2 : 0,
+    freq3 : 0,
+    freq4 : 0,
+    freq5 : 0,
+    freq6 : 0,
+    freq7 : 0,
+    freq8 : 0,
+    elbow : this.yesnoInt[0].value,
+    type : this.roundSilencerTypes[3].value,
+    silencers : []
+  };
+
   constructor( private toolsService: ToolsService) {
     //this.active = true;
    }
@@ -686,6 +732,8 @@ export class ToolsComponent implements OnInit {
         // On Error
         (err:any) => {
           console.log(err);
+          alert(err);
+          this.showLoader = false;
         },
         // Finally
         () => this.showLoader = false);
@@ -715,6 +763,8 @@ export class ToolsComponent implements OnInit {
         // On Error
         (err:any) => {
           console.log(err);
+          alert(err);
+          this.showLoader = false;
         },
         // Finally
         () => this.showLoader = false);
@@ -736,6 +786,8 @@ export class ToolsComponent implements OnInit {
         // On Error
         (err:any) => {
           console.log(err);
+          alert(err);
+          this.showLoader = false;
         },
         // Finally
         () => this.showLoader = false);
@@ -752,6 +804,8 @@ export class ToolsComponent implements OnInit {
         // On Error
         (err:any) => {
           console.log(err);
+          alert(err);
+          this.showLoader = false;
         },
         // Finally
         () => this.showLoader = false);
@@ -768,6 +822,8 @@ export class ToolsComponent implements OnInit {
         // On Error
         (err:any) => {
           console.log(err);
+          alert(err);
+          this.showLoader = false;
         },
         // Finally
         () => this.showLoader = false);
@@ -791,6 +847,8 @@ export class ToolsComponent implements OnInit {
         // On Error
         (err:any) => {
           console.log(err);
+          alert(err);
+          this.showLoader = false;
         },
         // Finally
         () => this.showLoader = false);
@@ -813,6 +871,8 @@ export class ToolsComponent implements OnInit {
         // On Error
         (err:any) => {
           console.log(err);
+          alert(err);
+          this.showLoader = false;
         },
         // Finally
         () => this.showLoader = false);
@@ -835,6 +895,8 @@ export class ToolsComponent implements OnInit {
         // On Error
         (err:any) => {
           console.log(err);
+          alert(err);
+          this.showLoader = false;
         },
         // Finally
         () => this.showLoader = false);
@@ -857,6 +919,8 @@ export class ToolsComponent implements OnInit {
         // On Error
         (err:any) => {
           console.log(err);
+          alert(err);
+          this.showLoader = false;
         },
         // Finally
         () => this.showLoader = false);
@@ -879,6 +943,8 @@ export class ToolsComponent implements OnInit {
         // On Error
         (err:any) => {
           console.log(err);
+          alert(err);
+          this.showLoader = false;
         },
         // Finally
         () => this.showLoader = false);
@@ -901,6 +967,8 @@ export class ToolsComponent implements OnInit {
         // On Error
         (err:any) => {
           console.log(err);
+          alert(err);
+          this.showLoader = false;
         },
         // Finally
         () => this.showLoader = false);    
@@ -923,6 +991,8 @@ export class ToolsComponent implements OnInit {
         // On Error
         (err:any) => {
           console.log(err);
+          alert(err);
+          this.showLoader = false;
         },
         // Finally
         () => this.showLoader = false);
@@ -945,6 +1015,8 @@ export class ToolsComponent implements OnInit {
         // On Error
         (err:any) => {
           console.log(err);
+          alert(err);
+          this.showLoader = false;
         },
         // Finally
         () => this.showLoader = false);
@@ -967,6 +1039,8 @@ export class ToolsComponent implements OnInit {
         // On Error
         (err:any) => {
           console.log(err);
+          alert(err);
+          this.showLoader = false;
         },
         // Finally
         () => this.showLoader = false);
@@ -993,6 +1067,36 @@ export class ToolsComponent implements OnInit {
         // On Error
         (err:any) => {
           console.log(err);
+          alert(err);
+          this.showLoader = false;
+        },
+        // Finally
+        () => this.showLoader = false);
+  }
+
+  public onSelectRoundSilencer(){
+    this.showLoader = true;
+    this.toolsService.selectRoundSilencer(this.roundSilencer)
+      .subscribe((data:IRoundSilencer) => {
+          if ( data ){
+            // console.log(data);
+            // console.log(this.ductConvert);
+            // const duct = JSON.stringify(data);
+            this.roundSilencer = data;
+            // var foo = this.roundSilencer.silencers[0];
+            // for(let noo of this.roundSilencer.silencers){
+            //   console.log(noo);
+            // }
+            // console.log(this.ductConvert);
+          } else {
+            console.log("error");
+          }
+      },
+        // On Error
+        (err:any) => {
+          console.log(err);
+          alert(err);
+          this.showLoader = false;
         },
         // Finally
         () => this.showLoader = false);
@@ -1248,6 +1352,8 @@ export class ToolsComponent implements OnInit {
         // On Error
         (err:any) => {
           console.log(err);
+          alert(err);
+          this.showLoader = false;
         },
         // Finally
         () => this.showLoader = false);
@@ -1355,6 +1461,34 @@ export class ToolsComponent implements OnInit {
     this.savedResultsRectSilencer.push(savedResult);
   }
 
+  public addRoundSelection(silencer,i){
+    if (this.tag === undefined || this.tag.length == 0 ){
+      alert("Please fill in the tag field before selecting silencers.");
+      return;
+    }
+
+    var savedResult = {
+      Tag: this.tag,
+      Model: silencer.model,
+      Length: silencer.length,
+      PressureDrop: silencer.pressureDrop,
+      Weight: silencer.weight,
+      Freq1: silencer.freqOne,
+      Freq2: silencer.freqTwo,
+      Freq3: silencer.freqThree,
+      Freq4: silencer.freqFour,
+      Freq5: silencer.freqFive,
+      Freq6: silencer.freqSix,
+      Freq7: silencer.freqSeven,
+      Freq8: silencer.freqEight,
+      Selection: "",
+      Diameter: silencer.diameter      
+    }
+    //silencer.selection = true;
+    this.roundSilencer.silencers[i].selected = this.savedResultsRoundSilencer.length;
+    this.savedResultsRoundSilencer.push(savedResult);
+  }
+
   public removeRectSelection(silencer, i){
     var index = silencer.selected;
     this.savedResultsRectSilencer.splice(silencer.selected,1);
@@ -1367,6 +1501,22 @@ export class ToolsComponent implements OnInit {
     for ( var j = 0; j < this.rectSilencer.silencers.length; j++ ){
       if ( this.rectSilencer.silencers[j].selected > index ){
         this.rectSilencer.silencers[j].selected = this.rectSilencer.silencers[j].selected-1;
+      }
+    }
+  }
+
+  public removeRoundSelection(silencer, i){
+    var index = silencer.selected;
+    this.savedResultsRoundSilencer.splice(silencer.selected,1);
+    this.roundSilencer.silencers[i].selected = 0;
+    // Loop over all silencers after the one removed and reduce the selection by 1
+    // for(let noo of this.roundSilencer.silencers){
+    //   if (noo.selected > i){
+    //     noo.selected = noo.selected -1;
+    //   }
+    for ( var j = 0; j < this.roundSilencer.silencers.length; j++ ){
+      if ( this.roundSilencer.silencers[j].selected > index ){
+        this.roundSilencer.silencers[j].selected = this.roundSilencer.silencers[j].selected-1;
       }
     }
   }
@@ -1384,6 +1534,8 @@ export class ToolsComponent implements OnInit {
         // On Error
         (err:any) => {
           console.log(err);
+          alert(err);
+          this.showLoader = false;
         },
         // Finally
         () => this.showLoader = false);
@@ -1440,6 +1592,14 @@ export class ToolsComponent implements OnInit {
     if ( cModel == 'E' && this.rectSilencer.elbow == 0 ) return false;
     if ( cModel == 'L' && this.rectSilencer.louver == 0 ) return false;
     if ( cModel == 'W' && this.rectSilencer.wide == 0 ) return false;
+    
+    return true;
+  }
+
+  public showRoundModel( model ){
+    var cModel = model.charAt(1);
+
+    if ( cModel == 'E' && this.roundSilencer.elbow == 0 ) return false;
     
     return true;
   }

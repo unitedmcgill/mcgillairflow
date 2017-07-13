@@ -15,6 +15,7 @@ import { IFactair } from '../models/factair';
 import { IOffset } from '../models/offset';
 import { IAcoustical } from '../models/acoustical';
 import { IRectSilencer } from '../models/rect-silencer';
+import { IRoundSilencer } from '../models/round-silencer';
 
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/map';
@@ -369,6 +370,27 @@ public selectRectSilencer(silencer : IRectSilencer) : Observable<IRectSilencer>{
         //alert(url + ":" + bodyString);
     }   
 
+public selectRoundSilencer(silencer : IRoundSilencer) : Observable<IRoundSilencer>{
+       
+        let bodyString = JSON.stringify(silencer); // Stringify payload
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let url = this.config.apiUrl+"/roundsilencer";
+
+        return this.http.post(url, bodyString, {headers:headers})
+        .map((res:Response) => {
+            let data = res.json();
+            //console.log('test: '+data);
+            // Fix enums
+            //let duct = DuctType[data.type];
+            //data.type = duct;
+
+            return data;
+        })      
+        .catch(this._handleError);
+       
+        //alert(url + ":" + bodyString);
+    }  
+
     public calcStack(calcSupport : IStackDesign) : Observable<IStackDesign>{
        
         let bodyString = JSON.stringify(calcSupport); // Stringify payload
@@ -392,7 +414,7 @@ public selectRectSilencer(silencer : IRectSilencer) : Observable<IRectSilencer>{
 
     private _handleError(error:any){
         console.error(error);
-        return Observable.throw(error.json().error || ' error');
+        return Observable.throw(error._body);
     }
 
     private extractData(res: Response) {
