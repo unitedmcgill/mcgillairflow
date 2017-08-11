@@ -37,6 +37,18 @@ export class JumbotronComponent implements OnInit {
       {
         image: `assets/img/carousel/6.jpg`,
         text:`` 
+      },
+      {
+        image: `assets/img/carousel/7.jpg`,
+        text:`` 
+      },
+      {
+        image: `assets/img/carousel/8.jpg`,
+        text:`` 
+      },
+      {
+        image: `assets/img/carousel/9.jpg`,
+        text:`` 
       });
 
     // for (let i = 0; i < 4; i++) {
