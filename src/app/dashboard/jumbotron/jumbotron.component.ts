@@ -15,8 +15,12 @@ export class JumbotronComponent implements OnInit {
   public constructor() {
     // Set the images for the jumbotron
     this.slides.push({
-        image: `assets/img/carousel/1.jpg`,
+        image: `assets/img/carousel/0.jpg`,
         text: ``
+      },
+      {
+        image: `assets/img/carousel/1.jpg`,
+        text:`` 
       },
       {
         image: `assets/img/carousel/2.jpg`,
