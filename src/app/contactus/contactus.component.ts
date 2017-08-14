@@ -33,7 +33,7 @@ export class ContactUsComponent implements OnInit {
     //alert(JSON.stringify(this.config));
     
     // Set the domain the request is coming from
-    this.contact.forWebsiteDomain = "McGill AirFlow";
+    this.contact.forWebsiteDomain = "AirFlow";
     this.contactUsService.sendMessage(this.contact);
 
     // Clear the form since we are doing *ngIf="active" on the form tag
