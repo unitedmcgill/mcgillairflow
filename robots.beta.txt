@@ -1,4 +1,4 @@
 User-agent: *
 
 # The sitemap must be an absolute URL
-sitemap: http://www.mcgillairflow.com/sitemap.xml
+sitemap: http://beta.mcgillairflow.com/sitemap.xml
