@@ -688,7 +688,8 @@ export class ToolsComponent implements OnInit {
     freq8 : 0,
     elbow : this.yesnoInt[0].value,
     type : this.roundSilencerTypes[3].value,
-    silencers : []
+    silencers : [],
+    invalid : null
   };
 
   constructor( private toolsService: ToolsService) {
@@ -773,7 +774,8 @@ export class ToolsComponent implements OnInit {
   public onCalcPressure(){
     // Check the type and call the correct toolsService
     this.showLoader = true;
-    if ( this.operatingPressure.type == 0 )
+    let theType : number = this.operatingPressure.type;
+    if (theType == 0 )
     {
       this.toolsService.calcPressure(this.operatingPressure)
         .subscribe((data:ICalcOperatingPressure) => {
@@ -791,7 +793,7 @@ export class ToolsComponent implements OnInit {
         },
         // Finally
         () => this.showLoader = false);
-    }else if ( this.operatingPressure.type == 1 ) 
+    }else if ( theType == 1 ) 
     {
       this.toolsService.calcStiffenerSpacing(this.operatingPressure)
         .subscribe((data:ICalcOperatingPressure) => {
@@ -809,7 +811,7 @@ export class ToolsComponent implements OnInit {
         },
         // Finally
         () => this.showLoader = false);
-    }else if ( this.operatingPressure.type == 2 )
+    }else if ( theType == 2 )
     {
       this.toolsService.calcMinThickness(this.operatingPressure)
         .subscribe((data:ICalcOperatingPressure) => {
@@ -1159,8 +1161,8 @@ export class ToolsComponent implements OnInit {
   }
 
   public upTheTube(){
-    var td = this.orificetube.tubeDiameter + 1;
-    var br = this.orificetube.orificeDiameter / td;
+    let td : number = this.orificetube.tubeDiameter + 1;
+    let br : number = this.orificetube.orificeDiameter / td;
     if (td > 99) {
         td = 99;
     }
@@ -1184,8 +1186,8 @@ export class ToolsComponent implements OnInit {
   }
 
   public downTheTube(){
-    var td = this.orificetube.tubeDiameter - 1;
-    var br = this.orificetube.orificeDiameter / td;
+    let td : number = this.orificetube.tubeDiameter - 1;
+    let br : number =  this.orificetube.orificeDiameter / td;
 
     if (td < 4) {
         td = 4;
@@ -1388,19 +1390,20 @@ export class ToolsComponent implements OnInit {
     var tmpResultVal = String(this.operatingPressure.gauge);
     var tmpResultUnit = 'ga';
     var tmpGauge = String(this.operatingPressure.ductClass);
-    if ( this.operatingPressure.type==0)
+    let theType : number = this.operatingPressure.type;
+    if ( theType==0)
     {
       tmpResultVal = String(this.operatingPressure.operatingPressure);
       tmpResultUnit = 'in. wg';
       tmpGauge = String(this.operatingPressure.gauge);
-    } else if ( this.operatingPressure.type==1) {
+    } else if ( theType==1) {
       tmpResultVal = String(this.operatingPressure.stiffenerSpacing);
       tmpResultUnit = 'feet';
       tmpGauge = String(this.operatingPressure.gauge);
     } 
 
     var saveResult = {
-     DuctType: this.pressures[this.operatingPressure.type].display,
+     DuctType: this.pressures[theType].display,
      Spiral: String(this.operatingPressure.spiral),
      Material: this.operatingPressure.material,
      Diameter: String(this.operatingPressure.diameter),
@@ -1587,19 +1590,19 @@ export class ToolsComponent implements OnInit {
   }
 
   public showModel( model ){
-    var cModel = model.charAt(1);
-
-    if ( cModel == 'E' && this.rectSilencer.elbow == 0 ) return false;
-    if ( cModel == 'L' && this.rectSilencer.louver == 0 ) return false;
-    if ( cModel == 'W' && this.rectSilencer.wide == 0 ) return false;
+    let cModel : string = model.charAt(1);
+    
+    if ( cModel == "E" && this.rectSilencer.elbow == 0 ) return false;
+    if ( cModel == "L" && this.rectSilencer.louver == 0 ) return false;
+    if ( cModel == "W" && this.rectSilencer.wide == 0 ) return false;
     
     return true;
   }
 
   public showRoundModel( model ){
-    var cModel = model.charAt(1);
+    let cModel : string = model.charAt(1);
 
-    if ( cModel == 'E' && this.roundSilencer.elbow == 0 ) return false;
+    if ( cModel == "E" && this.roundSilencer.elbow == 0 ) return false;
     
     return true;
   }
@@ -1634,7 +1637,7 @@ export class ToolsComponent implements OnInit {
     }    
   }
 
-  public getModelStyle( model ){
+  public getModelStyle( model : string ){
     var sOutput;
 
     if (model.indexOf("CE") == 0 || model.lastIndexOf("*") == model.length - 1) {
@@ -1650,7 +1653,7 @@ export class ToolsComponent implements OnInit {
     return sOutput;   
   }
 
-  public getModelValue( model, includeDashes ){
+  public getModelValue( model : string, includeDashes ){
     if (model === "Model") return "Model";
 
     if (model.lastIndexOf("*") == model.length - 1) {

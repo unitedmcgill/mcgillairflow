@@ -16,5 +16,6 @@ export interface IRoundSilencer {
     freq8 : number, // int
     elbow : number, // int 1 or 0
     type : string, // Single, Double, DoubleNoLoss, <blank> for All
-    silencers : ISilencerResult[]
+    silencers : ISilencerResult[],
+    invalid : null
 }
