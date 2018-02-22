@@ -4,6 +4,9 @@ import { ConfigService } from "../services/config.service";
 import { ContactUs } from '../models/contact-us'
 import {Observable} from 'rxjs/Rx';
 import { Values } from '../models/values';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+
 
 @Injectable()
 export class ContactUsService{

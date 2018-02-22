@@ -6,7 +6,6 @@ import { LocationStrategy,
 import { FormsModule }                  from '@angular/forms';
 
 import { AppComponent }                 from './app.component';
-import { Ng2BootstrapModule }           from 'ng2-bootstrap';
 import { NAV_DROPDOWN_DIRECTIVES }      from './shared/nav-dropdown.directive';
 
 import { ChartsModule }                 from 'ng2-charts/ng2-charts';
@@ -36,7 +35,6 @@ export function initConfig(config: ConfigService){
         HttpModule,
         AppRoutingModule,
         FormsModule,
-        Ng2BootstrapModule,
         ChartsModule
     ],
     declarations: [
