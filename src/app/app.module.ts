@@ -1,6 +1,6 @@
 import { NgModule, APP_INITIALIZER }    from '@angular/core';
 import { BrowserModule }                from '@angular/platform-browser';
-import { HttpModule }                   from '@angular/http';
+import { HttpClientModule }                   from '@angular/common/http';
 import { LocationStrategy,
          PathLocationStrategy }         from '@angular/common';
 import { FormsModule }                  from '@angular/forms';
@@ -8,7 +8,6 @@ import { FormsModule }                  from '@angular/forms';
 import { AppComponent }                 from './app.component';
 import { NAV_DROPDOWN_DIRECTIVES }      from './shared/nav-dropdown.directive';
 
-import { ChartsModule }                 from 'ng2-charts/ng2-charts';
 import { SIDEBAR_TOGGLE_DIRECTIVES }    from './shared/sidebar.directive';
 import { AsideToggleDirective }         from './shared/aside.directive';
 import { BreadcrumbsComponent }         from './shared/breadcrumb.component';
@@ -32,10 +31,9 @@ export function initConfig(config: ConfigService){
 @NgModule({
     imports: [
         BrowserModule,
-        HttpModule,
+        HttpClientModule,
         AppRoutingModule,
-        FormsModule,
-        ChartsModule
+        FormsModule
     ],
     declarations: [
         AppComponent,
